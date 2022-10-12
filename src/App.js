@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 function Game(props) {
   /**A component to contain the game functionality. */
   const [score, setScore] = useState(0);
-  const [rolls, setRolls] = useState(0);
+  const [rolls, setRolls] = useState(3);
   const [dice, setDice] = useState([
     {value: 1, locked: false}, 
-    {value: 1, locked: false}, 
-    {value: 1, locked: false}, 
-    {value: 1, locked: false}, 
-    {value: 1, locked: false}, 
+    {value: 2, locked: false}, 
+    {value: 3, locked: false}, 
+    {value: 4, locked: false}, 
+    {value: 5, locked: false}, 
   ])
 
   function setLockFactory(index) {
@@ -24,7 +24,7 @@ function Game(props) {
   
   return (
     <div>
-      <RollButton dice={dice} setDice={setDice} />
+      <RollButton dice={dice} setDice={setDice} rolls={rolls} setRolls={setRolls} />
       {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
     </div>
   );
@@ -32,13 +32,15 @@ function Game(props) {
 }
 
 
-function RollButton({ dice, setDice }) {
+function RollButton({ dice, setDice, rolls, setRolls }) {
   /**The button the user clicks to roll the dice. */
   function getDieRoll() {
     return Math.trunc(Math.random() * 6) + 1;
   }
 
   function rollDice() {
+    if (rolls < 1) return;
+    
     const newDice = [];
     for (let die of dice) {
       if (die.locked) {
@@ -49,13 +51,14 @@ function RollButton({ dice, setDice }) {
       }
     }
     setDice(newDice);
+    setRolls(n => n - 1);
   }
 
-    return (
+  return (
+    <div>
       <button onClick={rollDice}>Roll</button>
-    );
-
-
+      {rolls} roll{rolls!=1 && "s"} left
+    </div>);
 }
 
 
