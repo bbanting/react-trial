@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
 
+function range(start, end) {
+  const nums = [];
+  for (let x=start; x<end; x++) nums.push(x);
+  return nums;
+}
+
+
+function getDiceValues(dice) {
+  return dice.map(d => d.value);
+}
+
+
 function Game(props) {
   /**A component to contain the game functionality. */
-  const [score, setScore] = useState(0);
   const [rolls, setRolls] = useState(3);
-  const [dice, setDice] = useState([
-    {value: 1, locked: false}, 
-    {value: 2, locked: false}, 
-    {value: 3, locked: false}, 
-    {value: 4, locked: false}, 
-    {value: 5, locked: false}, 
-  ])
+  const initDiceState = range(1, 6).map(n => ({value: n, locked: false}));
+  const [dice, setDice] = useState(initDiceState);
+  const [hands, setHands] = useState([]); // {name, scoreFunc, score, selected}
 
   function setLockFactory(index) {
     const func = (value) => {
@@ -28,7 +35,6 @@ function Game(props) {
       {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
     </div>
   );
-  
 }
 
 
@@ -70,6 +76,16 @@ function Die({ die, setLock }) {
     </button>
     
   );
+}
+
+
+function HandList(props) {
+  /**The list of hands that may be selected for scoring. */
+  return (
+    <div>
+
+    </div>
+  )
 }
 
 
