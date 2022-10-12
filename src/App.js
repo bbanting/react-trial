@@ -13,6 +13,36 @@ function getDiceValues(dice) {
 }
 
 
+function upperHandsFactory(n) {
+  function func(values) {
+    const total = 0;
+    for (let v of values) {
+      if (v === n) total += v;
+    }
+    return total;
+  }
+  return func;
+}
+
+function handXOfKindFactory(x) {
+  function func(values) {
+    let found = [];
+    for (let val of values) {
+      for (let comp of values) {
+        if (val === comp) found.push(val);
+      }
+      if (found.length >= x) return found.reduce((a, b) => a+b);
+      else found = [];
+    }
+    return 0;
+  }  
+
+  return func;
+}
+
+const upperHandFuncs = range(1, 7).map(n => upperHandsFactory(n));
+
+
 function Game(props) {
   /**A component to contain the game functionality. */
   const [rolls, setRolls] = useState(3);
