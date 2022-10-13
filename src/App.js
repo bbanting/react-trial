@@ -15,7 +15,7 @@ function getDiceValues(dice) {
 
 function upperHandsFactory(n) {
   function func(values) {
-    const total = 0;
+    let total = 0;
     for (let v of values) {
       if (v === n) total += v;
     }
@@ -24,20 +24,34 @@ function upperHandsFactory(n) {
   return func;
 }
 
-function handXOfKindFactory(x) {
+function nOfKindHandsFactory(n) {
   function func(values) {
     let found = [];
     for (let val of values) {
       for (let comp of values) {
         if (val === comp) found.push(val);
       }
-      if (found.length >= x) return found.reduce((a, b) => a+b);
+      if (found.length >= n) return found.reduce((a, b) => a+b);
       else found = [];
     }
     return 0;
   }  
 
   return func;
+}
+
+function nStraightHandsFactory(n, points) {
+  function func(values) {
+    const tolerance = values.length - n;
+    let sortedValues = values.sort();
+    for (let t=0; t>tolerance; t++) {
+      const comp = sortedValues[0];
+      let attempt = sortedValues.filter((v, i) => v === comp+i);
+      if (attempt.length >= n) return points;
+      sortedValues = sortedValues.slice(1);
+    }
+    return 0;
+  }
 }
 
 const upperHandFuncs = range(1, 7).map(n => upperHandsFactory(n));
