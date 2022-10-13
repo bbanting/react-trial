@@ -26,6 +26,7 @@ function upperHandFactory(n) {
 
 function nOfKindHandFactory(n) {
   function func(values) {
+    if (!n) return values.reduce((a, b) => a+b);
     let found = [];
     for (let val of values) {
       if (values.filter((v => v === val)).length >= n) return found.reduce((a, b) => a+b);
@@ -68,15 +69,37 @@ function handFullHouse(values) {
 }
 
 
-const upperHandFuncs = range(1, 7).map(n => upperHandsFactory(n));
+const upperHandFuncs = [
+  {name: "Aces", scoreFunc: upperHandFactory(1)},
+  {name: "Twos", scoreFunc: upperHandFactory(2)},
+  {name: "Threes", scoreFunc: upperHandFactory(3)},
+  {name: "Fours", scoreFunc: upperHandFactory(4)},
+  {name: "Fives", scoreFunc: upperHandFactory(5)},
+  {name: "Sixes", scoreFunc: upperHandFactory(6)}
+]
+
+const lowerHandFuncs = [
+  {name: "Three of a Kind", scoreFunc: nOfKindHandFactory(3)}, 
+  {name: "Four of a Kind", scoreFunc: nOfKindHandFactory(4)}, 
+  {name: "Full House", scoreFunc: handFullHouse}, 
+  {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
+  {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
+  {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5)},
+  {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
+];
 
 
 function Game(props) {
   /**A component to contain the game functionality. */
   const [rolls, setRolls] = useState(3);
-  const initDiceState = range(1, 6).map(n => ({value: n, locked: false}));
-  const [dice, setDice] = useState(initDiceState);
-  const [hands, setHands] = useState([]); // {name, scoreFunc, score, selected}
+  const [yahtzees, setYahtzees] = useState(0);
+  const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
+  const [scores, setScores] = useState(range(1, 12).fill(0));
+
+  function getScore() {
+    let extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
+    return scores.reduce((a, b) => a+b) + extraYahtzeeScore;
+  }
 
   function setLockFactory(index) {
     const func = (value) => {
