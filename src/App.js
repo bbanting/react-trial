@@ -52,7 +52,7 @@ function nStraightHandFactory(n, points) {
 
 function handFullHouse(values) {
   let exclude;
-  for (val of values) {
+  for (let val of values) {
     if (values.filter((v) => v === val).length === 3) {
       exclude = val;
       break;
@@ -61,32 +61,12 @@ function handFullHouse(values) {
 
   if (!exclude) return 0;
 
-  for (val of values) {
+  for (let val of values) {
     if (val === exclude) continue;
     if (values.filter((v) => v === val).length === 2) return 25;
-
+  }
   return 0;
 }
-
-
-const upperHandFuncs = [
-  {name: "Aces", scoreFunc: upperHandFactory(1)},
-  {name: "Twos", scoreFunc: upperHandFactory(2)},
-  {name: "Threes", scoreFunc: upperHandFactory(3)},
-  {name: "Fours", scoreFunc: upperHandFactory(4)},
-  {name: "Fives", scoreFunc: upperHandFactory(5)},
-  {name: "Sixes", scoreFunc: upperHandFactory(6)}
-]
-
-const lowerHandFuncs = [
-  {name: "Three of a Kind", scoreFunc: nOfKindHandFactory(3)}, 
-  {name: "Four of a Kind", scoreFunc: nOfKindHandFactory(4)}, 
-  {name: "Full House", scoreFunc: handFullHouse}, 
-  {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
-  {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
-  {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5)},
-  {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
-];
 
 
 function Game(props) {
@@ -114,6 +94,7 @@ function Game(props) {
     <div>
       <RollButton dice={dice} setDice={setDice} rolls={rolls} setRolls={setRolls} />
       {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
+      <HandList scores={scores} setScores={setScores} />
     </div>
   );
 }
@@ -145,7 +126,8 @@ function RollButton({ dice, setDice, rolls, setRolls }) {
     <div>
       <button onClick={rollDice}>Roll</button>
       {rolls} roll{rolls!=1 && "s"} left
-    </div>);
+    </div>
+    );
 }
 
 
@@ -155,16 +137,44 @@ function Die({ die, setLock }) {
     <button onClick={() => setLock(!die.locked)}>
       {die.value}{die.locked && <p>locked</p>}
     </button>
-    
   );
 }
 
 
-function HandList(props) {
+function HandList({scores, setScores}) {
   /**The list of hands that may be selected for scoring. */
+  const hands = [
+    {name: "Aces", scoreFunc: upperHandFactory(1)},
+    {name: "Twos", scoreFunc: upperHandFactory(2)},
+    {name: "Threes", scoreFunc: upperHandFactory(3)},
+    {name: "Fours", scoreFunc: upperHandFactory(4)},
+    {name: "Fives", scoreFunc: upperHandFactory(5)},
+    {name: "Sixes", scoreFunc: upperHandFactory(6)},
+    {name: "Three of a Kind", scoreFunc: nOfKindHandFactory(3)}, 
+    {name: "Four of a Kind", scoreFunc: nOfKindHandFactory(4)}, 
+    {name: "Full House", scoreFunc: handFullHouse}, 
+    {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
+    {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
+    {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5)},
+    {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
+  ];
+
+  let selected = null;
+  
+  function select(index) {
+    selected = index;
+    console.log(`Selected ${hands[index].name}`);
+  }
+  
+  function setScore(index, score) {
+    let newScores = scores.slice();
+    newScores[index] = score;
+    setScores(newScores);
+  }
+
   return (
     <div>
-
+      {hands.map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{hands[i].name}</button>)))}
     </div>
   )
 }
