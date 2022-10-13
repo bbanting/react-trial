@@ -48,6 +48,7 @@ function nStraightHandFactory(n, points) {
     }
     return 0;
   }
+  return func;
 }
 
 function handFullHouse(values) {
@@ -74,7 +75,7 @@ function Game(props) {
   const [rolls, setRolls] = useState(3);
   const [yahtzees, setYahtzees] = useState(0);
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
-  const [scores, setScores] = useState(range(1, 12).fill(0));
+  const [scores, setScores] = useState(range(1, 12).fill(null));
 
   function getScore() {
     let extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
@@ -92,9 +93,10 @@ function Game(props) {
   
   return (
     <div>
+      <ScoreDisplay score={getScore()} />
       <RollButton dice={dice} setDice={setDice} rolls={rolls} setRolls={setRolls} />
       {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
-      <HandList scores={scores} setScores={setScores} />
+      <HandList scores={scores} setScores={setScores} dice={dice} />
     </div>
   );
 }
@@ -141,7 +143,17 @@ function Die({ die, setLock }) {
 }
 
 
-function HandList({scores, setScores}) {
+function ScoreDisplay({score}) {
+  /**Displays the current score. */
+  return (
+    <div style={{fontSize: "x-large"}}>
+      {score}
+    </div>
+  )
+}
+
+
+function HandList({scores, setScores, dice}) {
   /**The list of hands that may be selected for scoring. */
   const hands = [
     {name: "Aces", scoreFunc: upperHandFactory(1)},
@@ -162,20 +174,32 @@ function HandList({scores, setScores}) {
   let selected = null;
   
   function select(index) {
-    selected = index;
+    if (scores[index] === null) selected = index;
     console.log(`Selected ${hands[index].name}`);
   }
   
-  function setScore(index, score) {
+  function setScore() {
+    if (selected === null) return;
+
     let newScores = scores.slice();
-    newScores[index] = score;
+    const diceVals = getDiceValues(dice);
+    const score = hands[selected].scoreFunc(diceVals);
+    newScores[selected] = score;
+
     setScores(newScores);
+    selected = null;
   }
 
   return (
-    <div>
-      {hands.map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{hands[i].name}</button>)))}
-    </div>
+    <>
+      <div>
+        {hands.slice(0, 6).map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{hands[i].name}</button>)))}
+      </div>
+      <div>
+        {hands.slice(6, -1).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{hands[i+6].name}</button>)))}
+      </div>
+      <button onClick={setScore}>Confirm</button>
+    </>
   )
 }
 
