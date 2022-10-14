@@ -24,12 +24,16 @@ function upperHandFactory(n) {
   return func;
 }
 
-function nOfKindHandFactory(n) {
+function nOfKindHandFactory(n, points=0) {
   function func(values) {
-    if (!n) return values.reduce((a, b) => a+b);
-    let found = [];
-    for (let val of values) {
-      if (values.filter((v => v === val)).length >= n) return found.reduce((a, b) => a+b);
+    if (!n) return points ? points : values.reduce((a, b) => a+b);
+    
+    let found;
+    // t is the tolerance for failure.
+    for (let t = values.length - n; t>=0; t--) {
+      if ((found = values.filter((v => v === values[t]))).length >= n) {
+        return points ? points : found.reduce((a, b) => a+b);
+      }
     }
     return 0;
   }  
@@ -75,7 +79,7 @@ function Game(props) {
   const [rolls, setRolls] = useState(3);
   const [yahtzees, setYahtzees] = useState(0);
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
-  const [scores, setScores] = useState(range(1, 12).fill(null));
+  const [scores, setScores] = useState(range(1, 14).fill(null));
 
   function getScore() {
     let extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
@@ -127,7 +131,7 @@ function RollButton({ dice, setDice, rolls, setRolls }) {
   return (
     <div>
       <button onClick={rollDice}>Roll</button>
-      {rolls} roll{rolls!=1 && "s"} left
+      {rolls} roll{rolls!==1 && "s"} left
     </div>
     );
 }
@@ -155,6 +159,8 @@ function ScoreDisplay({score}) {
 
 function HandList({scores, setScores, dice}) {
   /**The list of hands that may be selected for scoring. */
+  const [selected, setSelected] = useState(null);
+
   const hands = [
     {name: "Aces", scoreFunc: upperHandFactory(1)},
     {name: "Twos", scoreFunc: upperHandFactory(2)},
@@ -167,15 +173,13 @@ function HandList({scores, setScores, dice}) {
     {name: "Full House", scoreFunc: handFullHouse}, 
     {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
     {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
-    {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5)},
+    {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5, 50)},
     {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
   ];
 
-  let selected = null;
-  
   function select(index) {
-    if (scores[index] === null) selected = index;
-    console.log(`Selected ${hands[index].name}`);
+    if (scores[index] === null) setSelected(() => index);
+    else if (index === selected) setSelected(null);
   }
   
   function setScore() {
@@ -187,7 +191,7 @@ function HandList({scores, setScores, dice}) {
     newScores[selected] = score;
 
     setScores(newScores);
-    selected = null;
+    setSelected(null);
   }
 
   return (
@@ -196,7 +200,7 @@ function HandList({scores, setScores, dice}) {
         {hands.slice(0, 6).map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{hands[i].name}</button>)))}
       </div>
       <div>
-        {hands.slice(6, -1).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{hands[i+6].name}</button>)))}
+        {hands.slice(6, hands.length).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{hands[i+6].name}</button>)))}
       </div>
       <button onClick={setScore}>Confirm</button>
     </>
