@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 
+const STATE = {
+  BEGIN: 1,
+  PREROLL: 2,
+  ROLLING: 3,
+  SCORING: 4,
+  FINISH: 5
+};
+
+
 function range(start, end) {
   const nums = [];
   for (let x=start; x<end; x++) nums.push(x);
@@ -43,11 +52,10 @@ function nOfKindHandFactory(n, points=0) {
 function nStraightHandFactory(n, points) {
   function func(values) {
     let sortedValues = values.sort();
-    let attempt;
     // t is the tolerance for failure.
     for (let t = values.length - n; t>=0; t--) {
       const comp = sortedValues[0];
-      if ((attempt = sortedValues.filter((v, i) => v === comp+i)).length >= n) {
+      if (sortedValues.filter((v, i) => v === comp+i).length >= n) {
         return points;
       }
       sortedValues = sortedValues.slice(1);
@@ -78,10 +86,22 @@ function handFullHouse(values) {
 
 function Game(props) {
   /**A component to contain the game functionality. */
+  const [gameState, setGameState] = useState(STATE.BEGIN);
   const [rolls, setRolls] = useState(3);
   const [yahtzees, setYahtzees] = useState(0);
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
   const [scores, setScores] = useState(range(1, 14).fill(null));
+
+  // This checks if the game is finished after scoring or moves
+  // the game state on to the next turn so long as the state is 
+  // not BEGIN (otherwise it may be triggered before the game starts).
+  useEffect(() => {
+    if (scores.every(s => s !== null)) setGameState(STATE.FINISH);
+    else if (gameState !== STATE.BEGIN) {
+      setGameState(STATE.PREROLL);
+      setRolls(3);
+    }
+  }, [scores]);
 
   function getScore() {
     let extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
@@ -97,25 +117,53 @@ function Game(props) {
     return func;
   }
   
+  function newGame() {
+    setGameState(STATE.BEGIN);
+    setRolls(3);
+    setYahtzees(0);
+    setDice(range(1, 6).map(n => ({value: n, locked: false})))
+    setScores(scores.fill(null));
+  }
+
   return (
     <div>
+      <h2>{gameState}</h2>
+      <button onClick={newGame}>New Game</button>
       <ScoreDisplay score={getScore()} />
-      <RollButton dice={dice} setDice={setDice} rolls={rolls} setRolls={setRolls} />
+      <RollButton 
+        dice={dice} setDice={setDice} 
+        rolls={rolls} setRolls={setRolls} 
+        gameState={gameState} setGameState={setGameState} 
+        />
       {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
-      <HandList scores={scores} setScores={setScores} dice={dice} />
+      <HandList 
+        scores={scores} setScores={setScores} 
+        dice={dice}
+        gameState={gameState}
+        />
     </div>
   );
 }
 
 
-function RollButton({ dice, setDice, rolls, setRolls }) {
+function RollButton({ dice, setDice, rolls, setRolls, gameState, setGameState }) {
   /**The button the user clicks to roll the dice. */
+  useEffect(() => {
+    if (rolls < 1) {
+      setGameState(STATE.SCORING);
+      setDice(dice.map(d => ({"value": d.value, "locked": false})));
+    }
+  }, [rolls]);
+
   function getDieRoll() {
     return Math.trunc(Math.random() * 6) + 1;
   }
 
   function rollDice() {
-    if (rolls < 1) return;
+    if (![STATE.ROLLING, STATE.BEGIN, STATE.PREROLL].includes(gameState)) return;
+    if ([STATE.BEGIN, STATE.PREROLL].includes(gameState)) setGameState(STATE.ROLLING);
+    
+    if (rolls < 1) setRolls(3);
     
     const newDice = [];
     for (let die of dice) {
@@ -126,6 +174,7 @@ function RollButton({ dice, setDice, rolls, setRolls }) {
         newDice.push({value: n, locked: false});
       }
     }
+
     setDice(newDice);
     setRolls(n => n - 1);
   }
@@ -159,7 +208,7 @@ function ScoreDisplay({score}) {
 }
 
 
-function HandList({scores, setScores, dice}) {
+function HandList({scores, setScores, dice, gameState}) {
   /**The list of hands that may be selected for scoring. */
   const [selected, setSelected] = useState(null);
 
@@ -183,9 +232,9 @@ function HandList({scores, setScores, dice}) {
     if (scores[index] === null) setSelected(() => index);
     else if (index === selected) setSelected(null);
   }
-  
+
   function setScore() {
-    if (selected === null) return;
+    if (![STATE.ROLLING, STATE.SCORING].includes(gameState) || selected === null) return;
 
     let newScores = scores.slice();
     const diceVals = getDiceValues(dice);
