@@ -42,12 +42,14 @@ function nOfKindHandFactory(n, points=0) {
 
 function nStraightHandFactory(n, points) {
   function func(values) {
-    const tolerance = values.length - n;
     let sortedValues = values.sort();
-    for (let t=0; t>tolerance; t++) {
+    let attempt;
+    // t is the tolerance for failure.
+    for (let t = values.length - n; t>=0; t--) {
       const comp = sortedValues[0];
-      let attempt = sortedValues.filter((v, i) => v === comp+i);
-      if (attempt.length >= n) return points;
+      if ((attempt = sortedValues.filter((v, i) => v === comp+i)).length >= n) {
+        return points;
+      }
       sortedValues = sortedValues.slice(1);
     }
     return 0;
