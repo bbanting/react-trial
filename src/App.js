@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {handAces, handTwos, handThrees, 
+  handFours, handFives, handSixes, 
+  hand3OfKind, hand4OfKind, handFullHouse, 
+  handSmallStraight, handLargeStraight, handYahtzee, 
+  handChance} from "./scoringfunctions";
 
 
 const STATE = {
@@ -11,19 +16,19 @@ const STATE = {
 
 
 const HANDS = [
-  {name: "Aces", scoreFunc: upperHandFactory(1)},
-  {name: "Twos", scoreFunc: upperHandFactory(2)},
-  {name: "Threes", scoreFunc: upperHandFactory(3)},
-  {name: "Fours", scoreFunc: upperHandFactory(4)},
-  {name: "Fives", scoreFunc: upperHandFactory(5)},
-  {name: "Sixes", scoreFunc: upperHandFactory(6)},
-  {name: "Three of a Kind", scoreFunc: nOfKindHandFactory(3)}, 
-  {name: "Four of a Kind", scoreFunc: nOfKindHandFactory(4)}, 
+  {name: "Aces", scoreFunc: handAces},
+  {name: "Twos", scoreFunc: handTwos},
+  {name: "Threes", scoreFunc: handThrees},
+  {name: "Fours", scoreFunc: handFours},
+  {name: "Fives", scoreFunc: handFives},
+  {name: "Sixes", scoreFunc: handSixes},
+  {name: "Three of a Kind", scoreFunc: hand3OfKind}, 
+  {name: "Four of a Kind", scoreFunc: hand4OfKind}, 
   {name: "Full House", scoreFunc: handFullHouse}, 
-  {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
-  {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
-  {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5, 50)},
-  {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
+  {name: "Small Straight", scoreFunc: handSmallStraight}, 
+  {name: "Large Straight", scoreFunc: handLargeStraight}, 
+  {name: "YAHTZEE", scoreFunc: handYahtzee},
+  {name: "Chance", scoreFunc: handChance}
 ];
 
 
@@ -36,68 +41,6 @@ function range(start, end) {
 
 function getDiceValues(dice) {
   return dice.map(d => d.value);
-}
-
-
-function upperHandFactory(n) {
-  function func(values) {
-    let total = 0;
-    for (let v of values) {
-      if (v === n) total += v;
-    }
-    return total;
-  }
-  return func;
-}
-
-function nOfKindHandFactory(n, points=0) {
-  function func(values) {
-    if (!n) return points ? points : values.reduce((a, b) => a+b);
-    
-    let found;
-    // t is the tolerance for failure.
-    for (let t = values.length - n; t>=0; t--) {
-      if ((found = values.filter((v => v === values[t]))).length >= n) {
-        return points ? points : found.reduce((a, b) => a+b);
-      }
-    }
-    return 0;
-  }  
-  return func;
-}
-
-function nStraightHandFactory(n, points) {
-  function func(values) {
-    let sortedValues = values.sort();
-    // t is the tolerance for failure.
-    for (let t = values.length - n; t>=0; t--) {
-      const comp = sortedValues[0];
-      if (sortedValues.filter((v, i) => v === comp+i).length >= n) {
-        return points;
-      }
-      sortedValues = sortedValues.slice(1);
-    }
-    return 0;
-  }
-  return func;
-}
-
-function handFullHouse(values) {
-  let exclude;
-  for (let val of values) {
-    if (values.filter((v) => v === val).length === 3) {
-      exclude = val;
-      break;
-    }
-  }
-
-  if (!exclude) return 0;
-
-  for (let val of values) {
-    if (val === exclude) continue;
-    if (values.filter((v) => v === val).length === 2) return 25;
-  }
-  return 0;
 }
 
 
@@ -148,7 +91,7 @@ function Game(props) {
         rolls={rolls} setRolls={setRolls} 
         gameState={gameState} setGameState={setGameState} 
         />
-      <HandList 
+      <ScoringSection 
         scores={scores} setScores={setScores} 
         dice={dice}
         gameState={gameState}
@@ -177,7 +120,9 @@ function DiceSection({ dice, setDice, rolls, setRolls, gameState, setGameState }
           rolls={rolls} setRolls={setRolls} 
           gameState={gameState} setGameState={setGameState} 
           />
-      {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
+      {dice.map(
+        (die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />
+        )}
     </div>
   );
 }
@@ -245,7 +190,39 @@ function ScoreDisplay({score}) {
 }
 
 
-function HandList({scores, setScores, dice, gameState, setYahtzees}) {
+function UpperHands({selected, selectFunc, scores}) {
+  const bonusScore = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0
+  return (
+    <div>
+      {HANDS.slice(0, 6).map(
+        ((v, i) => (
+          <button value={i} key={i} onClick={(e) => selectFunc(e.target.value)}>
+            {HANDS[i].name}
+          </button>
+          ))
+        )}
+      <p>BONUS: {bonusScore}</p>
+    </div>
+  );
+}
+
+
+function LowerHands({selected, selectFunc, scores}) {
+  return (
+    <div>
+      {HANDS.slice(6, HANDS.length).map(
+        ((v, i) => (
+          <button value={i+6} key={i+6} onClick={(e) => selectFunc(e.target.value)}>
+            {HANDS[i+6].name}
+          </button>
+          ))
+        )}
+    </div>
+  );
+}
+
+
+function ScoringSection({scores, setScores, dice, gameState, setYahtzees}) {
   /**The list of hands that may be selected for scoring. */
   const [selected, setSelected] = useState(null);
   
@@ -269,18 +246,11 @@ function HandList({scores, setScores, dice, gameState, setYahtzees}) {
 
   return (
     <>
-      <div>
-        {HANDS.slice(0, 6).map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{HANDS[i].name}</button>)))}
-      </div>
-      <div>
-        BONUS: {(scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0}
-      </div>
-      <div>
-        {HANDS.slice(6, HANDS.length).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{HANDS[i+6].name}</button>)))}
-      </div>
+      <UpperHands selected={selected} selectFunc={select} scores={scores} />
+      <LowerHands selected={selected} selectFunc={select} />
       <button onClick={setScore}>Confirm</button>
     </>
-  )
+  );
 }
 
 
