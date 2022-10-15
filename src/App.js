@@ -125,8 +125,9 @@ function Game(props) {
   }, [dice])
 
   function getScore() {
-    let extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
-    return scores.reduce((a, b) => a+b) + extraYahtzeeScore;
+    const extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
+    const bonus = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0;
+    return scores.reduce((a, b) => a+b) + extraYahtzeeScore + bonus;
   }
   
   function newGame() {
@@ -270,6 +271,9 @@ function HandList({scores, setScores, dice, gameState, setYahtzees}) {
     <>
       <div>
         {HANDS.slice(0, 6).map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{HANDS[i].name}</button>)))}
+      </div>
+      <div>
+        BONUS: {(scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0}
       </div>
       <div>
         {HANDS.slice(6, HANDS.length).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{HANDS[i+6].name}</button>)))}
