@@ -10,6 +10,23 @@ const STATE = {
 };
 
 
+const HANDS = [
+  {name: "Aces", scoreFunc: upperHandFactory(1)},
+  {name: "Twos", scoreFunc: upperHandFactory(2)},
+  {name: "Threes", scoreFunc: upperHandFactory(3)},
+  {name: "Fours", scoreFunc: upperHandFactory(4)},
+  {name: "Fives", scoreFunc: upperHandFactory(5)},
+  {name: "Sixes", scoreFunc: upperHandFactory(6)},
+  {name: "Three of a Kind", scoreFunc: nOfKindHandFactory(3)}, 
+  {name: "Four of a Kind", scoreFunc: nOfKindHandFactory(4)}, 
+  {name: "Full House", scoreFunc: handFullHouse}, 
+  {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
+  {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
+  {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5, 50)},
+  {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
+];
+
+
 function range(start, end) {
   const nums = [];
   for (let x=start; x<end; x++) nums.push(x);
@@ -91,7 +108,7 @@ function Game(props) {
   const [yahtzees, setYahtzees] = useState(0);
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
   const [scores, setScores] = useState(range(1, 14).fill(null));
-
+  
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
   // not BEGIN (otherwise it may be triggered before the game starts).
@@ -102,19 +119,14 @@ function Game(props) {
       setRolls(3);
     }
   }, [scores]);
+  
+  useEffect(() => {
+    if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
+  }, [dice])
 
   function getScore() {
     let extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
     return scores.reduce((a, b) => a+b) + extraYahtzeeScore;
-  }
-
-  function setLockFactory(index) {
-    const func = (value) => {
-      let newDice = dice.slice();
-      newDice[index].locked = value;
-      setDice(newDice);
-    }
-    return func;
   }
   
   function newGame() {
@@ -127,20 +139,44 @@ function Game(props) {
 
   return (
     <div>
-      <h2>{gameState}</h2>
       <button onClick={newGame}>New Game</button>
       <ScoreDisplay score={getScore()} />
-      <RollButton 
+      <p>Extra yahtzees: {yahtzees}</p>
+      <DiceSection 
         dice={dice} setDice={setDice} 
         rolls={rolls} setRolls={setRolls} 
         gameState={gameState} setGameState={setGameState} 
         />
-      {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
       <HandList 
         scores={scores} setScores={setScores} 
         dice={dice}
         gameState={gameState}
+        setYahtzees={setYahtzees}
         />
+    </div>
+  );
+}
+
+
+function DiceSection({ dice, setDice, rolls, setRolls, gameState, setGameState }) {
+  /**The section containing the dice and roll button. */
+  function setLockFactory(index) {
+    const func = (value) => {
+      let newDice = dice.slice();
+      newDice[index].locked = value;
+      setDice(newDice);
+    }
+    return func;
+  }
+
+  return (
+    <div>
+      <RollButton 
+          dice={dice} setDice={setDice} 
+          rolls={rolls} setRolls={setRolls} 
+          gameState={gameState} setGameState={setGameState} 
+          />
+      {dice.map((die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />)}
     </div>
   );
 }
@@ -208,26 +244,10 @@ function ScoreDisplay({score}) {
 }
 
 
-function HandList({scores, setScores, dice, gameState}) {
+function HandList({scores, setScores, dice, gameState, setYahtzees}) {
   /**The list of hands that may be selected for scoring. */
   const [selected, setSelected] = useState(null);
-
-  const hands = [
-    {name: "Aces", scoreFunc: upperHandFactory(1)},
-    {name: "Twos", scoreFunc: upperHandFactory(2)},
-    {name: "Threes", scoreFunc: upperHandFactory(3)},
-    {name: "Fours", scoreFunc: upperHandFactory(4)},
-    {name: "Fives", scoreFunc: upperHandFactory(5)},
-    {name: "Sixes", scoreFunc: upperHandFactory(6)},
-    {name: "Three of a Kind", scoreFunc: nOfKindHandFactory(3)}, 
-    {name: "Four of a Kind", scoreFunc: nOfKindHandFactory(4)}, 
-    {name: "Full House", scoreFunc: handFullHouse}, 
-    {name: "Small Straight", scoreFunc: nStraightHandFactory(4, 30)}, 
-    {name: "Large Straight", scoreFunc: nStraightHandFactory(5, 40)}, 
-    {name: "YAHTZEE", scoreFunc: nOfKindHandFactory(5, 50)},
-    {name: "Chance", scoreFunc: nOfKindHandFactory(0)}
-  ];
-
+  
   function select(index) {
     if (scores[index] === null) setSelected(() => index);
     else if (index === selected) setSelected(null);
@@ -238,9 +258,10 @@ function HandList({scores, setScores, dice, gameState}) {
 
     let newScores = scores.slice();
     const diceVals = getDiceValues(dice);
-    const score = hands[selected].scoreFunc(diceVals);
+    const score = HANDS[selected].scoreFunc(diceVals);
     newScores[selected] = score;
 
+    if (scores[11] && HANDS[11].scoreFunc(diceVals)) setYahtzees(n => n+1);
     setScores(newScores);
     setSelected(null);
   }
@@ -248,10 +269,10 @@ function HandList({scores, setScores, dice, gameState}) {
   return (
     <>
       <div>
-        {hands.slice(0, 6).map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{hands[i].name}</button>)))}
+        {HANDS.slice(0, 6).map(((v, i) => (<button value={i} key={i} onClick={(e) => select(e.target.value)}>{HANDS[i].name}</button>)))}
       </div>
       <div>
-        {hands.slice(6, hands.length).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{hands[i+6].name}</button>)))}
+        {HANDS.slice(6, HANDS.length).map(((v, i) => (<button value={i+6} key={i+6} onClick={(e) => select(e.target.value)}>{HANDS[i+6].name}</button>)))}
       </div>
       <button onClick={setScore}>Confirm</button>
     </>
