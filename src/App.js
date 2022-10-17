@@ -12,12 +12,16 @@ function Game(props) {
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
   const [diceHist, setDiceHist] = useState([]);
   const [scores, setScores] = useState(range(1, 14).fill(null));
-  
+  const [time, setTime] = useState(0);
+
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
   // not BEGIN (otherwise it may be triggered before the game starts).
   useEffect(() => {
-    if (scores.every(s => s !== null)) setGameState(STATE.FINISH);
+    if (scores.every(s => s !== null)) {
+      setGameState(STATE.FINISH);
+      setTime(t => Math.round((Date.now() - t) / 1000))
+    }
     else if (gameState !== STATE.BEGIN) {
       setGameState(STATE.PREROLL);
       setRolls(3);
@@ -58,6 +62,7 @@ function Game(props) {
         gameState={gameState}
         yahtzees={yahtzees} setYahtzees={setYahtzees}
         />
+      <Stats diceHist={diceHist} time={time}/>
     </div>
   );
 }
@@ -73,9 +78,27 @@ function ScoreDisplay({score}) {
 }
 
 
+function Stats({ diceHist, time }) {
+  /**Displays the stats for the current game. */
+  const placeholder = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
+  const counts = {...placeholder, ...getCounts(diceHist)};
+
+  return (
+    <div>
+      {Object.entries(counts).map(c => 
+        <p key={c[0]}>{c[0]}: {c[1]}</p>
+        )}
+      <p>Total rolls: {diceHist ? (diceHist.length / 5) : 0}</p>
+      <p>Total time: {time}</p>
+    </div>
+  )
+}
+
+
 function App() {
   return (
     <div>
+      <h1>Yahtzee</h1>
       <Game />
     </div>
   );
