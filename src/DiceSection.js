@@ -6,6 +6,7 @@ function DiceSection({ dice, setDice, rolls, setRolls, gameState, setGameState }
   /**The section containing the dice and roll button. */
   function setLockFactory(index) {
     const func = (value) => {
+      if (gameState != STATE.ROLLING) return;
       let newDice = dice.slice();
       newDice[index].locked = value;
       setDice(newDice);

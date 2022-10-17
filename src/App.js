@@ -24,6 +24,7 @@ function Game(props) {
   }, [scores]);
   
   useEffect(() => {
+    // Index 11 is yahtzee.
     if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
   }, [dice])
 

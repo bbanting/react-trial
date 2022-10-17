@@ -51,6 +51,7 @@ function ScoringSection({scores, setScores, dice, gameState, yahtzees, setYahtze
     const score = HANDS[selected].scoreFunc(diceVals);
     newScores[selected] = score;
 
+    // Index 11 is yahtzee.
     if (scores[11] && HANDS[11].scoreFunc(diceVals)) setYahtzees(n => n+1);
     setScores(newScores);
     setSelected(null);
