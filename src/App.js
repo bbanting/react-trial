@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {STATE, HANDS, range, getDiceValues} from "./util";
+import {STATE, HANDS, range, getDiceValues, getCounts} from "./util";
 import DiceSection from './DiceSection';
 import ScoringSection from "./ScoringSection";
 
@@ -10,6 +10,7 @@ function Game(props) {
   const [rolls, setRolls] = useState(3);
   const [yahtzees, setYahtzees] = useState(0);
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
+  const [diceHist, setDiceHist] = useState([]);
   const [scores, setScores] = useState(range(1, 14).fill(null));
   
   // This checks if the game is finished after scoring or moves
@@ -47,7 +48,7 @@ function Game(props) {
       <button onClick={newGame}>New Game</button>
       <ScoreDisplay score={getScore()} />
       <DiceSection 
-        dice={dice} setDice={setDice} 
+        dice={dice} setDice={setDice} setDiceHist={setDiceHist}
         rolls={rolls} setRolls={setRolls} 
         gameState={gameState} setGameState={setGameState} 
         />

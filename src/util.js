@@ -40,3 +40,14 @@ export function range(start, end) {
 export function getDiceValues(dice) {
   return dice.map(d => d.value);
 }
+
+
+export function getCounts(numbers) {
+  let results = {};
+  for (let n of numbers) {
+    if (results.hasOwnProperty(n)) results[n]++;
+    else results[n] = 1;
+  }
+
+  return results;
+}

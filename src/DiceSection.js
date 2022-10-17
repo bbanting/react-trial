@@ -1,12 +1,12 @@
 import {useEffect} from "react";
-import {STATE} from "./util";
+import {getDiceValues, STATE} from "./util";
 
 
-function DiceSection({ dice, setDice, rolls, setRolls, gameState, setGameState }) {
+function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState }) {
   /**The section containing the dice and roll button. */
   function setLockFactory(index) {
     const func = (value) => {
-      if (gameState != STATE.ROLLING) return;
+      if (gameState !== STATE.ROLLING) return;
       let newDice = dice.slice();
       newDice[index].locked = value;
       setDice(newDice);
@@ -17,7 +17,7 @@ function DiceSection({ dice, setDice, rolls, setRolls, gameState, setGameState }
   return (
     <div>
       <RollButton 
-          dice={dice} setDice={setDice} 
+          dice={dice} setDice={setDice} setDiceHist={setDiceHist}
           rolls={rolls} setRolls={setRolls} 
           gameState={gameState} setGameState={setGameState} 
           />
@@ -29,7 +29,7 @@ function DiceSection({ dice, setDice, rolls, setRolls, gameState, setGameState }
 }
 
 
-function RollButton({ dice, setDice, rolls, setRolls, gameState, setGameState }) {
+function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState }) {
   /**The button the user clicks to roll the dice. */
   useEffect(() => {
     if (rolls < 1) {
@@ -60,6 +60,7 @@ function RollButton({ dice, setDice, rolls, setRolls, gameState, setGameState })
 
     setDice(newDice);
     setRolls(n => n - 1);
+    setDiceHist(d => d.concat(getDiceValues(newDice)));
   }
 
   return (
