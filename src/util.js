@@ -51,3 +51,16 @@ export function getCounts(numbers) {
 
   return results;
 }
+
+
+export function getScoreCookie() {
+  const re = /highscore=(\d+)/;
+  const currentScore= re.exec(document.cookie);
+  if (currentScore != null) return currentScore[1];
+  else return 0;
+}
+
+
+export function setScoreCookie(score) {
+  document.cookie = `highscore=${score}`;
+}
