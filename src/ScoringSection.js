@@ -6,29 +6,33 @@ function UpperHands({selectFunc, scores}) {
   const bonusScore = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0
   return (
     <div>
-      {HANDS.slice(0, 6).map(
-        ((v, i) => (
-          <button value={i} key={i} onClick={(e) => selectFunc(e.target.value)}>
+      {HANDS.slice(0, 6).map((v, i) => {
+        const style = (scores[i] !== null) ? {backgroundColor: "pink"} : null;
+        return (
+          <button value={i} key={i} onClick={(e) => selectFunc(e.target.value)} style={style}>
             {HANDS[i].name}
           </button>
-          ))
-        )}
+          )
+        }
+      )}
       <p>BONUS: {bonusScore}</p>
     </div>
   );
 }
 
 
-function LowerHands({selectFunc}) {
+function LowerHands({selectFunc, scores}) {
   return (
     <div>
-      {HANDS.slice(6, HANDS.length).map(
-        ((v, i) => (
-          <button value={i+6} key={i+6} onClick={(e) => selectFunc(e.target.value)}>
+      {HANDS.slice(6, HANDS.length).map((v, i) => {
+        const style = (scores[i+6] !== null) ? {backgroundColor: "pink"} : null;
+        return (
+          <button value={i+6} key={i+6} onClick={(e) => selectFunc(e.target.value)} style={style}>
             {HANDS[i+6].name}
           </button>
-          ))
-        )}
+          )
+        }
+      )}
     </div>
   );
 }
@@ -60,9 +64,9 @@ function ScoringSection({scores, setScores, dice, gameState, yahtzees, setYahtze
   return (
     <>
       <UpperHands selected={selected} selectFunc={select} scores={scores} />
-      <LowerHands selected={selected} selectFunc={select} />
+      <LowerHands selected={selected} selectFunc={select} scores={scores} />
       <p>Extra yahtzees: {yahtzees}</p>
-      <button onClick={setScore}>Confirm</button>
+      <button onClick={setScore}>Play</button>
     </>
   );
 }

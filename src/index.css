@@ -1,17 +1,24 @@
 html {
-  font-family:Verdana, Geneva, Tahoma, sans-serif
+  font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
-.title {
-  text-align: center;
+body {
+  margin: 0;
 }
 
-th {
-  text-align: left;
-  font-size: x-large;
+.main {
+  height: 100%;
+  width: 75%;
+  margin: 0 auto;
+  padding: 1em;
 }
 
-input {
-  width: 100%;
-  padding: 0.2rem;
+h1 {
+  margin: 0;
+
+}
+
+button {
+  font-size: 1em;
+  padding: .5em;
 }

@@ -43,7 +43,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
   }
 
   function rollDice() {
-    if (![STATE.ROLLING, STATE.BEGIN, STATE.PREROLL].includes(gameState)) return;
+    if ([STATE.SCORING, STATE.FINISH].includes(gameState)) return;
     if ([STATE.BEGIN, STATE.PREROLL].includes(gameState)) setGameState(STATE.ROLLING);
     
     if (rolls < 1) setRolls(3);

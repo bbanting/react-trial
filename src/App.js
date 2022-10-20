@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {STATE, HANDS, range, getDiceValues, getCounts, getScoreCookie, setScoreCookie} from "./util";
 import DiceSection from './DiceSection';
 import ScoringSection from "./ScoringSection";
@@ -15,15 +15,17 @@ function Game(props) {
   // time stores the start time of the game and, at game finish, the total elapsed time
   const [time, setTime] = useState(Date.now());
 
+  const prevGameStateRef = useRef(null);
+
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
   // not BEGIN (otherwise it may be triggered before the game starts).
   useEffect(() => {
     if (scores.every(s => s !== null)) {
-      setGameState(STATE.FINISH);
+      changeGameState(STATE.FINISH);
       setTime(t => Math.round((Date.now() - t) / 1000));
     } else if (gameState !== STATE.BEGIN) {
-      setGameState(STATE.PREROLL);
+      changeGameState(STATE.PREROLL);
       setRolls(3);
     }
   }, [scores]);
@@ -39,6 +41,17 @@ function Game(props) {
     if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
   }, [dice]);
 
+  useEffect(() => {
+    if (prevGameStateRef.current === STATE.BEGIN) {
+      setTime(Date.now());
+    }
+  }, [gameState]);
+
+  function changeGameState(newState) {
+    prevGameStateRef.current = gameState;
+    setGameState(newState);
+  }
+
   function getScore() {
     const extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
     const bonus = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0;
@@ -50,7 +63,7 @@ function Game(props) {
   }
 
   function newGame() {
-    setGameState(STATE.BEGIN);
+    changeGameState(STATE.BEGIN);
     setRolls(3);
     setYahtzees(0);
     setDice(range(1, 6).map(n => ({value: n, locked: false})))
@@ -59,12 +72,12 @@ function Game(props) {
 
   return (
     <div>
-      <button onClick={newGame}>New Game</button>
+      <NewGameButton resetFunc={newGame} />
       <ScoreDisplay score={getScore()} />
       <DiceSection 
         dice={dice} setDice={setDice} setDiceHist={setDiceHist}
         rolls={rolls} setRolls={setRolls} 
-        gameState={gameState} setGameState={setGameState} 
+        gameState={gameState} setGameState={changeGameState} 
         />
       <ScoringSection 
         scores={scores} setScores={setScores} 
@@ -76,9 +89,20 @@ function Game(props) {
         <Stats 
           diceHist={diceHist} 
           time={time} 
-          score={getScore()} highscore={isNewHighscore}/>
+          score={getScore()} highscore={isNewHighscore}
+          resetFunc={newGame}
+          />
         }
     </div>
+  );
+}
+
+
+function NewGameButton({resetFunc}) {
+  return (
+    <button onClick={resetFunc}>
+      New Game
+    </button>
   );
 }
 
@@ -93,11 +117,10 @@ function ScoreDisplay({score}) {
 }
 
 
-function Stats({ diceHist, time, score, highscore }) {
+function Stats({ diceHist, time, score, highscore, resetFunc}) {
   /**Displays the stats for the current game. */
   const placeholder = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
   const counts = {...placeholder, ...getCounts(diceHist)};
-  const timeElapsed = time
 
   return (
     <div>
@@ -108,6 +131,7 @@ function Stats({ diceHist, time, score, highscore }) {
         )}
       <p>Total rolls: {diceHist ? (diceHist.length / 5) : 0}</p>
       <p>Total time: {time}</p>
+      <NewGameButton resetFunc={resetFunc} />
     </div>
   )
 }
@@ -115,8 +139,7 @@ function Stats({ diceHist, time, score, highscore }) {
 
 function App() {
   return (
-    <div>
-      <h1>Yahtzee</h1>
+    <div className="main">
       <Game />
     </div>
   );
