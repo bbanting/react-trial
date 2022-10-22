@@ -11,7 +11,8 @@ function UpperHands({selected, selectFunc, scores}) {
         const classname = `hand ${scores[i] !== null ? "played" : ""} ${i == selected ? "selected" : ""}`;
         return (
           <button className={classname} value={i} key={i} onClick={(e) => selectFunc(e.target.value)}>
-            {HANDS[i].name}
+            <div className="handscore">{scores[i] !== null ? scores[i] : " "}</div>
+            <div className="handtitle">{HANDS[i].name}</div>
           </button>
           )
         }
@@ -27,10 +28,11 @@ function LowerHands({selected, selectFunc, scores}) {
   return (
     <div className="hand-container lower">
       {HANDS.slice(6, HANDS.length).map((v, i) => {
-        const classname = `hand ${scores[i+6] !== null ? "played" : ""} ${(i+6) === selected ? "selected" : ""}`;
+        const classname = `hand ${scores[i+6] !== null ? "played" : ""} ${(i+6) == selected ? "selected" : ""}`;
         return (
           <button className={classname} value={i+6} key={i+6} onClick={(e) => selectFunc(e.target.value)}>
-            {HANDS[i+6].name}
+            <div className="handscore">{scores[i+6] !== null ? scores[i+6] : " "}</div>
+            <div className="handtitle">{HANDS[i+6].name}</div>
           </button>
           )
         }
@@ -45,6 +47,7 @@ function ScoringSection({scores, setScores, dice, gameState, yahtzees, setYahtze
   const [selected, setSelected] = useState(null);
   
   function select(index) {
+    if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
     if (index == selected) setSelected(null);
     else if (scores[index] === null) setSelected(() => index);
   }

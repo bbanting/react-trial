@@ -46,10 +46,10 @@ button:focus {
   text-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.368);
   font-size: 1.5em;
   font-weight: bold;
+  text-align: right;
   color: white;
   background-color: hsl(217, 100%, 55%);
-  margin-bottom: .2em;
-  padding: .5em;
+  padding: .3em;
   border: 0;
   border-radius: .5em;
   transition: all .1s ease-out;
@@ -57,10 +57,7 @@ button:focus {
 
 .hand:active {
   position: relative;
-  top: 0.125em;
-  padding-bottom: 0.4em;
-  margin-bottom: .3em;
-  box-shadow: none; 
+  top: 0.1em;
   box-shadow: 0 -0.1em hsla(0, 0%, 0%, 0.3) inset, 0 0 .4em hsla(0, 0%, 0%, 0.3) inset;
 }
 
@@ -70,4 +67,21 @@ button:focus {
 
 .played {
   background-color: hsl(0, 0%, 32%);
+}
+
+.handscore {
+  min-width: 1.6em;
+  height: 1em;
+  float: left;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  border-radius: .2em;
+  box-shadow: 0 1px 4px hsla(0, 0%, 0%, 0.5);
+  text-align: center;
+  padding: .2em 0 .2em 0;
+  transition: all .1s ease-out;
+}
+
+.handtitle {
+  display: inline;
+  vertical-align: middle;
 }
