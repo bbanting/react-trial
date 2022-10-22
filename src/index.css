@@ -18,7 +18,45 @@ h1 {
 
 }
 
-button {
+button:hover {
+  cursor:pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* .hand-container {
+  display: grid;
+} */
+
+.hand:active {
+  position: relative;
+  top: 0.125em;
+  padding-bottom: 0.4em;
+  margin-bottom: .3em;
+  box-shadow: none; 
+  box-shadow: 0 -0.1em hsla(0, 0%, 0%, 0.3) inset;
+}
+
+.hand {
+  display: block;
+  box-shadow: 0 -0.2em hsla(0, 0%, 0%, 0.3) inset;
+  text-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.368);
   font-size: 1em;
+  font-weight: bold;
+  color: white;
+  background-color: hsl(217, 100%, 55%);
+  margin-bottom: .2em;
   padding: .5em;
+  border: 0;
+  border-radius: .5em;
+}
+
+.selected {
+  background-color: orange
+}
+
+.played {
+  background-color: hsl(0, 0%, 32%);
 }
