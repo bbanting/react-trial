@@ -5,9 +5,10 @@ import {HANDS, STATE, getDiceValues} from "./util";
 function UpperHands({selected, selectFunc, scores}) {
   const bonusScore = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0
   return (
-    <div className=".hand-container">
+    <>
+    <div className="hand-container">
       {HANDS.slice(0, 6).map((v, i) => {
-        const classname = `hand ${scores[i] !== null ? "played" : ""} ${i === selected ? "selected" : ""}`;
+        const classname = `hand ${scores[i] !== null ? "played" : ""} ${i == selected ? "selected" : ""}`;
         return (
           <button className={classname} value={i} key={i} onClick={(e) => selectFunc(e.target.value)}>
             {HANDS[i].name}
@@ -15,15 +16,16 @@ function UpperHands({selected, selectFunc, scores}) {
           )
         }
       )}
-      <p>BONUS: {bonusScore}</p>
     </div>
+    <p>BONUS: {bonusScore}</p>
+    </>
   );
 }
 
 
 function LowerHands({selected, selectFunc, scores}) {
   return (
-    <div className=".hand-container">
+    <div className="hand-container lower">
       {HANDS.slice(6, HANDS.length).map((v, i) => {
         const classname = `hand ${scores[i+6] !== null ? "played" : ""} ${(i+6) === selected ? "selected" : ""}`;
         return (
@@ -43,8 +45,8 @@ function ScoringSection({scores, setScores, dice, gameState, yahtzees, setYahtze
   const [selected, setSelected] = useState(null);
   
   function select(index) {
-    if (scores[index] === null) setSelected(() => index);
-    else if (index === selected) setSelected(null);
+    if (index == selected) setSelected(null);
+    else if (scores[index] === null) setSelected(() => index);
   }
 
   function setScore() {

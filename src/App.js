@@ -14,8 +14,9 @@ function Game(props) {
   const [scores, setScores] = useState(range(1, 14).fill(null));
   // time stores the start time of the game and, at game finish, the total elapsed time
   const [time, setTime] = useState(Date.now());
-
+  
   const prevGameStateRef = useRef(null);
+  useEffect(() => document.addEventListener("contextmenu", e => e.preventDefault()));
 
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
