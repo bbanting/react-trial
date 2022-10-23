@@ -21,9 +21,11 @@ function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, s
           rolls={rolls} setRolls={setRolls} 
           gameState={gameState} setGameState={setGameState} 
           />
-      {dice.map(
-        (die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />
-        )}
+      <div className="dice-container">
+        {dice.map(
+          (die, i) => <Die key={i} die={die} setLock={setLockFactory(i)} />
+          )}
+      </div>
     </div>
   );
 }
@@ -74,9 +76,10 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
 
 function Die({ die, setLock }) {
   /**A single die in the game. */
+  const classname = `die${die.locked ? " locked" : ""}`;
   return (
-    <button onClick={() => setLock(!die.locked)}>
-      {die.value}{die.locked && <p>locked</p>}
+    <button className={classname} onClick={() => setLock(!die.locked)}>
+      {die.value}
     </button>
   );
 }

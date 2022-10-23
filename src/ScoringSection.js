@@ -3,14 +3,14 @@ import {HANDS, STATE, getDiceValues} from "./util";
 
 
 function UpperHands({selected, selectFunc, scores}) {
-  const bonusScore = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0
+  const bonusScore = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0;
   return (
     <>
     <div className="hand-container">
       {HANDS.slice(0, 6).map((v, i) => {
         const classname = `hand ${scores[i] !== null ? "played" : ""} ${i == selected ? "selected" : ""}`;
         return (
-          <button className={classname} value={i} key={i} onClick={(e) => selectFunc(e.target.value)}>
+          <button className={classname} value={i} key={i} onClick={(e) => selectFunc(e.currentTarget.value)}>
             <div className="handscore">{scores[i] !== null ? scores[i] : " "}</div>
             <div className="handtitle">{HANDS[i].name}</div>
           </button>
@@ -30,7 +30,7 @@ function LowerHands({selected, selectFunc, scores}) {
       {HANDS.slice(6, HANDS.length).map((v, i) => {
         const classname = `hand ${scores[i+6] !== null ? "played" : ""} ${(i+6) == selected ? "selected" : ""}`;
         return (
-          <button className={classname} value={i+6} key={i+6} onClick={(e) => selectFunc(e.target.value)}>
+          <button className={classname} value={i+6} key={i+6} onClick={(e) => selectFunc(e.currentTarget.value)}>
             <div className="handscore">{scores[i+6] !== null ? scores[i+6] : " "}</div>
             <div className="handtitle">{HANDS[i+6].name}</div>
           </button>
