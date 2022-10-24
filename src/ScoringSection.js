@@ -42,7 +42,7 @@ function LowerHands({selected, selectFunc, scores}) {
 }
 
 
-function ScoringSection({scores, setScores, dice, gameState, yahtzees, setYahtzees}) {
+function ScoringSection({scores, setScores, dice, setDice, gameState, yahtzees, setYahtzees}) {
   /**The list of hands that may be selected for scoring. */
   const [selected, setSelected] = useState(null);
   
@@ -63,6 +63,7 @@ function ScoringSection({scores, setScores, dice, gameState, yahtzees, setYahtze
     // Index 11 is yahtzee.
     if (scores[11] && HANDS[11].scoreFunc(diceVals)) setYahtzees(n => n+1);
     setScores(newScores);
+    setDice(dice.map(d => ({"value": d.value, "locked": false})));
     setSelected(null);
   }
 

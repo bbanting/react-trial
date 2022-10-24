@@ -40,7 +40,7 @@ function Game(props) {
   useEffect(() => {
     // Index 11 is yahtzee.
     if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
-  }, [dice]);
+  }, [rolls]);
 
   useEffect(() => {
     if (prevGameStateRef.current === STATE.BEGIN) {
@@ -69,6 +69,7 @@ function Game(props) {
     setYahtzees(0);
     setDice(range(1, 6).map(n => ({value: n, locked: false})))
     setScores(scores.fill(null));
+    setDiceHist([]);
   }
 
   return (
@@ -82,7 +83,7 @@ function Game(props) {
         />
       <ScoringSection 
         scores={scores} setScores={setScores} 
-        dice={dice}
+        dice={dice} setDice={setDice}
         gameState={gameState}
         yahtzees={yahtzees} setYahtzees={setYahtzees}
         />
