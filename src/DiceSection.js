@@ -2,70 +2,15 @@ import {useEffect, useRef} from "react";
 import {getDiceValues, range, STATE} from "./util";
 
 
-const oneDie = 
-  <g id="Five">
-    <rect id="Square" width="250" height="250" rx="20"/>
-    {/* <circle id="Dot5" cx="189" cy="197" r="25" fill="black"/> */}
-    {/* <circle id="Dot2" cx="189" cy="53" r="25" fill="black"/> */}
-    {/* <circle id="Dot4" cx="60" cy="197" r="25" fill="black"/> */}
-    <circle id="Dot3" cx="125" cy="125" r="25" fill="black"/>
-    {/* <circle id="Dot1" cx="60" cy="53" r="25" fill="black"/> */}
-  </g>;
-const twoDie = 
-  <g id="Two">
-    <rect id="Square" width="250" height="250" rx="20"/>
-    <circle id="Dot5" cx="189" cy="197" r="25" fill="black"/>
-    {/* <circle id="Dot2" cx="189" cy="53" r="25" fill="black"/> */}
-    {/* <circle id="Dot4" cx="60" cy="197" r="25" fill="black"/> */}
-    {/* <circle id="Dot3" cx="125" cy="125" r="25" fill="black"/> */}
-    <circle id="Dot1" cx="60" cy="53" r="25" fill="black"/>
-  </g>;
-const threeDie = 
-  <g id="Three">
-    <rect id="Square" width="250" height="250" rx="20"/>
-    <circle id="Dot5" cx="189" cy="197" r="25" fill="black"/>
-    {/* <circle id="Dot2" cx="189" cy="53" r="25" fill="black"/> */}
-    {/* <circle id="Dot4" cx="60" cy="197" r="25" fill="black"/> */}
-    <circle id="Dot3" cx="125" cy="125" r="25" fill="black"/>
-    <circle id="Dot1" cx="60" cy="53" r="25" fill="black"/>
-  </g>;
-const fourDie = 
-  <g id="Four">
-    <rect id="Square" width="250" height="250" rx="20"/>
-    <circle id="Dot5" cx="189" cy="197" r="25" fill="black"/>
-    <circle id="Dot2" cx="189" cy="53" r="25" fill="black"/>
-    <circle id="Dot4" cx="60" cy="197" r="25" fill="black"/>
-    {/* <circle id="Dot3" cx="125" cy="125" r="25" fill="black"/> */}
-    <circle id="Dot1" cx="60" cy="53" r="25" fill="black"/>
-  </g>;
-const fiveDie = 
-  <g id="Five">
-    <rect id="Square" width="250" height="250" rx="20"/>
-    <circle id="Dot5" cx="189" cy="197" r="25" fill="black"/>
-    <circle id="Dot2" cx="189" cy="53" r="25" fill="black"/>
-    <circle id="Dot4" cx="60" cy="197" r="25" fill="black"/>
-    <circle id="Dot3" cx="125" cy="125" r="25" fill="black"/>
-    <circle id="Dot1" cx="60" cy="53" r="25" fill="black"/>
-  </g>;
-const sixDie = 
-  <g id="Six">
-    <rect id="Square" width="250" height="250" rx="20"/>
-    <circle id="Dot6" cx="189" cy="197" r="25" fill="black"/>
-    <circle id="Dot5" cx="189" cy="125" r="25" fill="black"/>
-    <circle id="Dot4" cx="189" cy="53" r="25" fill="black"/>
-    <circle id="Dot3" cx="60" cy="197" r="25" fill="black"/>
-    <circle id="Dot2" cx="60" cy="125" r="25" fill="black"/>
-    <circle id="Dot1" cx="60" cy="53" r="25" fill="black"/>
-  </g>;
-
-const dieSVGs = {
-  1: oneDie,
-  2: twoDie,
-  3: threeDie,
-  4: fourDie,
-  5: fiveDie,
-  6: sixDie
+const shapeClasses = {
+  1: "one",
+  2: "two",
+  3: "three",
+  4: "four",
+  5: "five",
+  6: "six"
 }
+
 
 function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState }) {
   /**The section containing the dice and roll button. */
@@ -142,20 +87,24 @@ function RollButton({ dice, setDice, prevDiceVals, setDiceHist, rolls, setRolls,
 }
 
 
-function Die({ die, prevDieVal, setLock }) {
+function Die({ die, prevDieVal, key, setLock }) {
   /**A single die in the game. */
-  const classname = `die${die.locked ? " locked" : ""}${die.new ? " new" : ""}`;
-  const SVG = dieSVGs[die.value];
-  const prevSVG = dieSVGs[prevDieVal];
-  const style = {animationDelay: `${Math.floor(Math.random()*100)}ms`};
+  const dieClass = `die${die.locked ? " locked" : ""}${die.new ? " new" : ""}`;
+  const shapeClass = shapeClasses[die.value];
+  const dieStyle = {animationDelay: `${Math.floor(Math.random()*100)}ms`};
+  const shapeStyle = {transitionDelay: dieStyle["animationDelay"]};
 
   return (
-    <div key={Math.random()} className={classname} style={style} onClick={() => setLock(!die.locked)}>
-      <svg className="currsvg" width="250" height="250" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {SVG}
-      </svg>
-      <svg className="prevsvg" width="250" height="250" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {prevSVG}
+    <div {...(die.new ? {key:Math.random()} : {key:key})} className={dieClass} style={dieStyle} onClick={() => setLock(!die.locked)}>
+      <svg className={shapeClass} width="250" height="250" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect id="Square" width="250" height="250" rx="20"/>
+        <circle class="dot1" style={shapeStyle} cx="60" cy="53" r="25"/>
+        <circle class="dot2" style={shapeStyle} cx="189" cy="53" r="25"/>
+        <circle class="dot3" style={shapeStyle} cx="60" cy="125" r="25"/> 
+        <circle class="dot4" style={shapeStyle} cx="125" cy="125" r="25"/>
+        <circle class="dot5" style={shapeStyle} cx="189" cy="125" r="25"/>
+        <circle class="dot6" style={shapeStyle} cx="60" cy="197" r="25"/>
+        <circle class="dot7" style={shapeStyle} cx="189" cy="197" r="25"/>
       </svg>
     </div>
   );

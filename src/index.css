@@ -94,28 +94,24 @@ button:hover {
 }
 
 .die {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr;
   border-radius: 10%; 
   box-shadow: 3px 3px hsla(0, 0%, 0%, 0.75);
-  transform-box: fill-box;
   position: relative;
-  transition: top .5s ease;
+  top: 0;
+  transition: top .3s ease;
 }
 
 .die:hover {
   cursor: pointer;
 }
 
-.new {
+.die.new {
   animation: roll .2s ease-in-out;
 }
 
 .die > svg {
   height: 100%;
   width: 100%;
-  grid-area: 1 / 1 / 1 / 1;
   border-radius: 10%;
   background-color: white;
   box-sizing: border-box;
@@ -125,14 +121,33 @@ button:hover {
   top: -.5em;
 }
 
-.die.new > .currsvg {
-  animation: fade-in .1s step-end;
-  animation-delay: inherit;
-  animation-fill-mode: both;
+circle {
+  fill: white;
+  transition: all .1s step-end;
 }
 
-.currsvg {
-  position: relative;
+.six>.dot1, .five>.dot1, .four>.dot1, .three>.dot1, .two>.dot1 {
+  fill: black;
+}
+
+.six>.dot2, .five>.dot2, .four>.dot2 {
+  fill: black;
+}
+
+.six>.dot3, .six>.dot5 {
+  fill: black;
+}
+
+.five>.dot4, .three>.dot4, .one>.dot4 {
+  fill: black;
+}
+
+.six>.dot6, .five>.dot6, .four>.dot6 {
+  fill: black;
+}
+
+.six>.dot7, .five>.dot7, .four>.dot7, .three>.dot7, .two>.dot7 {
+  fill: black;
 }
 
 @keyframes roll{
