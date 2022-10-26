@@ -9,7 +9,7 @@ function Game(props) {
   const [gameState, setGameState] = useState(STATE.BEGIN);
   const [rolls, setRolls] = useState(3);
   const [yahtzees, setYahtzees] = useState(0);
-  const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false})));
+  const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false, new: false})));
   const [diceHist, setDiceHist] = useState([]);
   const [scores, setScores] = useState(range(1, 14).fill(null));
   // time stores the start time of the game and, at game finish, the total elapsed time

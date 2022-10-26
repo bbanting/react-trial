@@ -4,12 +4,13 @@ html {
 
 body {
   margin: 0;
-  background-color: hsl(55, 100%, 51%);
+  background-color: hsl(50, 100%, 50%);
 }
 
 .main {
   height: 100%;
   width: 75%;
+  min-width: 350px;
   margin: 0 auto;
   padding: 1em;
 }
@@ -52,7 +53,7 @@ button:hover {
   padding: .3em;
   border: 0;
   border-radius: .5em;
-  transition: all .1s ease-out;
+  transition: all .05s ease-out;
 }
 
 .hand:active {
@@ -87,28 +88,90 @@ button:hover {
 }
 
 .dice-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  gap: .75em;
+  display: flex;
+  gap: 1em;
   margin: 1em 0;
 }
 
 .die {
-  /* text-shadow: 0 0 .4em hsla(0, 0%, 0%, 0.368); */
-  font-size: 2.5em;
-  font-weight:bold;
-  padding: 1em;
-  border: none;
-  border-radius: 20%;
-  box-shadow: 2px 2px .2em hsla(0, 0%, 0%, 0.15) inset;
-  outline: .1em solid hsla(0, 0%, 0%, 0.8);
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  border-radius: 10%; 
+  box-shadow: 3px 3px hsla(0, 0%, 0%, 0.75);
+  transform-box: fill-box;
+  position: relative;
+  transition: top .5s ease;
 }
 
-.locked {
-  outline: .1em solid hsl(217, 100%, 55%);
+.die:hover {
+  cursor: pointer;
 }
 
-@media(max-width: 650px) {
+.new {
+  animation: roll .2s ease-in-out;
+}
+
+.die > svg {
+  height: 100%;
+  width: 100%;
+  grid-area: 1 / 1 / 1 / 1;
+  border-radius: 10%;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.die.locked {
+  top: -.5em;
+}
+
+.die.new > .currsvg {
+  animation: fade-in .1s step-end;
+  animation-delay: inherit;
+  animation-fill-mode: both;
+}
+
+.currsvg {
+  position: relative;
+}
+
+@keyframes roll{
+  0% {
+    top: 10px;
+    transform: scale(1.02);
+  }
+  20% {
+    top: -10px;
+    transform: scale(1.04);
+  }
+  40% {
+    top: 10px;
+    transform: scale(1.06);
+  }
+  60% {
+    top: -10px;
+    transform: scale(1.04);
+  }
+  80% {
+    top: 10px;
+    transform: scale(1.02);
+  }
+  100% {
+    top: -10px;
+    transform: scale(1.01);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media(max-width: 700px) {
   .hand-container {
     grid-template-columns: 1fr;
     grid-auto-flow: inherit;
