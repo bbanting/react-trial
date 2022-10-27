@@ -16,7 +16,6 @@ function Game(props) {
   const [time, setTime] = useState(Date.now());
   
   const prevGameStateRef = useRef(null);
-  useEffect(() => document.addEventListener("contextmenu", e => e.preventDefault()));
 
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 

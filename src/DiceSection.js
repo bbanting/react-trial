@@ -36,7 +36,10 @@ function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, s
           />
       <div className="dice-container">
         {dice.map(
-          (die, i) => <Die key={i} die={die} prevDieVal={prevDiceVals.current[i]} setLock={setLockFactory(i)} />
+          (die, i) => <Die 
+              key={i} die={die} 
+              prevDieVal={prevDiceVals.current[i]} 
+              setLock={setLockFactory(i)} rolls={rolls} />
           )}
       </div>
     </div>
@@ -87,24 +90,38 @@ function RollButton({ dice, setDice, prevDiceVals, setDiceHist, rolls, setRolls,
 }
 
 
-function Die({ die, prevDieVal, key, setLock }) {
+function Die({ die, prevDieVal, setLock, rolls }) {
   /**A single die in the game. */
-  const dieClass = `die${die.locked ? " locked" : ""}${die.new ? " new" : ""}`;
+  const dieClass = `die${die.locked ? " locked" : ""}`;
   const shapeClass = shapeClasses[die.value];
   const dieStyle = {animationDelay: `${Math.floor(Math.random()*100)}ms`};
   const shapeStyle = {transitionDelay: dieStyle["animationDelay"]};
+  const dieRef = useRef(null);
+
+  useEffect(() => {
+    if (die.new) dieRef.current.classList.add("new");
+  }, [rolls]);
 
   return (
-    <div {...(die.new ? {key:Math.random()} : {key:key})} className={dieClass} style={dieStyle} onClick={() => setLock(!die.locked)}>
-      <svg className={shapeClass} width="250" height="250" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div 
+      ref={dieRef} 
+      onAnimationEnd={() => dieRef.current.classList.remove("new")} 
+      className={dieClass} 
+      style={dieStyle} 
+      onClick={() => setLock(!die.locked)}>
+      <svg 
+        className={shapeClass} 
+        width="250" height="250" 
+        viewBox="0 0 250 250" 
+        fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect id="Square" width="250" height="250" rx="20"/>
-        <circle class="dot1" style={shapeStyle} cx="60" cy="53" r="25"/>
-        <circle class="dot2" style={shapeStyle} cx="189" cy="53" r="25"/>
-        <circle class="dot3" style={shapeStyle} cx="60" cy="125" r="25"/> 
-        <circle class="dot4" style={shapeStyle} cx="125" cy="125" r="25"/>
-        <circle class="dot5" style={shapeStyle} cx="189" cy="125" r="25"/>
-        <circle class="dot6" style={shapeStyle} cx="60" cy="197" r="25"/>
-        <circle class="dot7" style={shapeStyle} cx="189" cy="197" r="25"/>
+        <circle className="dot1" style={shapeStyle} cx="60" cy="53" r="25"/>
+        <circle className="dot2" style={shapeStyle} cx="189" cy="53" r="25"/>
+        <circle className="dot3" style={shapeStyle} cx="60" cy="125" r="25"/> 
+        <circle className="dot4" style={shapeStyle} cx="125" cy="125" r="25"/>
+        <circle className="dot5" style={shapeStyle} cx="189" cy="125" r="25"/>
+        <circle className="dot6" style={shapeStyle} cx="60" cy="197" r="25"/>
+        <circle className="dot7" style={shapeStyle} cx="189" cy="197" r="25"/>
       </svg>
     </div>
   );
