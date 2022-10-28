@@ -12,9 +12,8 @@ const shapeClasses = {
 }
 
 
-function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState }) {
+function DiceSection({ dice, setDice, rolls, gameState }) {
   /**The section containing the dice and roll button. */
-  const prevDiceVals = useRef(range(1, 6));
 
   function setLockFactory(index) {
     const func = (value) => {
@@ -28,17 +27,10 @@ function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, s
 
   return (
     <div>
-      <RollButton 
-          dice={dice} setDice={setDice}
-          prevDiceVals={prevDiceVals} setDiceHist={setDiceHist}
-          rolls={rolls} setRolls={setRolls} 
-          gameState={gameState} setGameState={setGameState} 
-          />
       <div className="dice-container">
         {dice.map(
           (die, i) => <Die 
               key={i} die={die} 
-              prevDieVal={prevDiceVals.current[i]} 
               setLock={setLockFactory(i)} rolls={rolls} />
           )}
       </div>
@@ -47,7 +39,7 @@ function DiceSection({ dice, setDice, setDiceHist, rolls, setRolls, gameState, s
 }
 
 
-function RollButton({ dice, setDice, prevDiceVals, setDiceHist, rolls, setRolls, gameState, setGameState }) {
+function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState }) {
   /**The button the user clicks to roll the dice. */
   useEffect(() => {
     if (rolls < 1) {
@@ -67,30 +59,31 @@ function RollButton({ dice, setDice, prevDiceVals, setDiceHist, rolls, setRolls,
     if (rolls < 1) setRolls(3);
     
     const newDice = [];
+    const forHistory = [];
     for (let die of dice) {
       if (die.locked) {
         newDice.push({...die, ...{new: false}});
       } else {
         const n = getDieRoll();
         newDice.push({value: n, locked: false, new: true});
+        forHistory.push(n);
       }
     }
-    prevDiceVals.current = getDiceValues(dice);
     setDice(newDice);
     setRolls(n => n - 1);
-    setDiceHist(d => d.concat(getDiceValues(newDice)));
+    setDiceHist(d => d.concat(forHistory));
   }
 
   return (
     <div>
-      <button onClick={rollDice}>Roll</button>
+      <button className="rollbtn" onClick={rollDice}>Roll</button>
       {rolls} roll{rolls!==1 && "s"} left
     </div>
     );
 }
 
 
-function Die({ die, prevDieVal, setLock, rolls }) {
+function Die({ die, setLock, rolls }) {
   /**A single die in the game. */
   const dieClass = `die${die.locked ? " locked" : ""}`;
   const shapeClass = shapeClasses[die.value];
@@ -127,4 +120,6 @@ function Die({ die, prevDieVal, setLock, rolls }) {
   );
 }
 
+
+export {RollButton};
 export default DiceSection;

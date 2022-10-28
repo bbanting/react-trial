@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {STATE, HANDS, range, getDiceValues, getCounts, getScoreCookie, setScoreCookie} from "./util";
-import DiceSection from './DiceSection';
-import ScoringSection from "./ScoringSection";
+import DiceSection, {RollButton} from './DiceSection';
+import ScoringSection, {PlayButton} from "./ScoringSection";
 
 
 function Game(props) {
@@ -12,6 +12,7 @@ function Game(props) {
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false, new: false})));
   const [diceHist, setDiceHist] = useState([]);
   const [scores, setScores] = useState(range(1, 14).fill(null));
+  const [selected, setSelected] = useState(null);
   // time stores the start time of the game and, at game finish, the total elapsed time
   const [time, setTime] = useState(Date.now());
   
@@ -76,15 +77,27 @@ function Game(props) {
       <NewGameButton resetFunc={newGame} />
       <ScoreDisplay score={getScore()} />
       <DiceSection 
-        dice={dice} setDice={setDice} setDiceHist={setDiceHist}
+        dice={dice} setDice={setDice}
+        rolls={rolls} 
+        gameState={gameState} 
+        />
+      <RollButton 
+        dice={dice} setDice={setDice}
+        setDiceHist={setDiceHist}
         rolls={rolls} setRolls={setRolls} 
-        gameState={gameState} setGameState={changeGameState} 
+        gameState={gameState} setGameState={setGameState} 
+        />
+      <PlayButton 
+        scores={scores} setScores={setScores}
+        dice={dice} setDice={setDice}
+        selected={selected} setSelected={setSelected}
+        setYahtzees={setYahtzees} gameState={gameState} 
         />
       <ScoringSection 
-        scores={scores} setScores={setScores} 
-        dice={dice} setDice={setDice}
+        selected={selected} setSelected={setSelected}
+        scores={scores}
         gameState={gameState}
-        yahtzees={yahtzees} setYahtzees={setYahtzees}
+        yahtzees={yahtzees}
         />
       {gameState === STATE.FINISH && 
         <Stats 
@@ -101,7 +114,7 @@ function Game(props) {
 
 function NewGameButton({resetFunc}) {
   return (
-    <button onClick={resetFunc}>
+    <button className="newgamebtn" onClick={resetFunc}>
       New Game
     </button>
   );

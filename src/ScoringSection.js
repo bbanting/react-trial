@@ -42,16 +42,8 @@ function LowerHands({selected, selectFunc, scores}) {
 }
 
 
-function ScoringSection({scores, setScores, dice, setDice, gameState, yahtzees, setYahtzees}) {
-  /**The list of hands that may be selected for scoring. */
-  const [selected, setSelected] = useState(null);
-  
-  function select(index) {
-    if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
-    if (index == selected) setSelected(null);
-    else if (scores[index] === null) setSelected(() => index);
-  }
-
+function PlayButton({scores, setScores, dice, setDice, selected, setSelected, setYahtzees, gameState}) {
+  /**The button to confirm a play choice. */
   function setScore() {
     if (![STATE.ROLLING, STATE.SCORING].includes(gameState) || selected === null) return;
 
@@ -66,15 +58,31 @@ function ScoringSection({scores, setScores, dice, setDice, gameState, yahtzees, 
     setDice(dice.map(d => ({"value": d.value, "locked": false})));
     setSelected(null);
   }
+  return (
+    <button className="playbtn" onClick={setScore}>
+      Play
+    </button>
+  );
+}
+
+
+function ScoringSection({selected, setSelected, scores, gameState, yahtzees}) {
+  /**The list of hands that may be selected for scoring. */  
+  function select(index) {
+    if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
+    if (index == selected) setSelected(null);
+    else if (scores[index] === null) setSelected(() => index);
+  }
 
   return (
     <>
       <UpperHands selected={selected} selectFunc={select} scores={scores} />
       <LowerHands selected={selected} selectFunc={select} scores={scores} />
       <p>Extra yahtzees: {yahtzees}</p>
-      <button onClick={setScore}>Play</button>
     </>
   );
 }
 
+
+export {PlayButton};
 export default ScoringSection;
