@@ -1,16 +1,22 @@
-html {
-  font-family: Verdana, Geneva, Tahoma, sans-serif
+:root {
+  --yellow: hsl(50, 100%, 50%);
+  --gray: hsl(0, 0%, 50%);
+}
+
+* {
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 body {
   margin: 0;
-  background-color: hsl(50, 100%, 50%);
+  background-color: var(--yellow);
 }
 
 .main {
   height: 100%;
   width: 75%;
   min-width: 350px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 1em;
 }
@@ -23,9 +29,10 @@ button {
   position: relative;
   top: 0;
   display: block;
-  box-shadow: 0 -0.2em hsla(0, 0%, 0%, 0.4) inset;
+  box-shadow: 0 -0.2em hsla(0, 0%, 0%, 0.4) inset,
+              0 .2em .3em hsla(0, 0%, 100%, 0.1) inset;
   font-weight: bold;
-  text-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.2);
+  text-shadow: 1px 1px 5px hsla(0, 0%, 0%, 0.1);
   border: 0;
   border-radius: .5em;
   transition: all .05s linear;
@@ -47,8 +54,10 @@ button:hover {
 } */
 
 .newgamebtn {
-  padding: .5em;
-  font-size: 1.5em;
+  padding: .75em;
+  font-size: 1.25em;
+  background-color: white;
+  color: hsl(0, 0%, 20%)
 }
 
 .roll-play-container {
@@ -65,16 +74,13 @@ button:hover {
   background-color: hsl(35, 100%, 50%);
   color: white;
   width: 100%;
+  border-radius: 1em;
 }
 
 .playbtn.locked, .rollbtn.locked {
-  background-color: hsl(0, 0%, 35%);
+  background-color: var(--gray);
+  color: hsl(0, 0%, 80%);
 }
-
-/* .inactive {
-  box-shadow: inherit;
-  top: 0;
-} */
 
 .rollbtn {
   font-size: 2em;
@@ -82,6 +88,7 @@ button:hover {
   background-color: hsl(35, 100%, 50%);
   color: white;
   width: 100%;
+  border-radius: 1em;
 }
 
 .rollbtn div {
@@ -93,7 +100,6 @@ button:hover {
   height: 1em;
   background-color: hsla(0, 0%, 100%, 0.5);
   border-radius: .2em;
-  box-shadow: 0 1px 4px hsla(0, 0%, 0%, 0.2);
   text-align: center;
   padding: 0 .25em;
   transition: all .1s ease-out;
@@ -117,14 +123,18 @@ button:hover {
   text-align: right;
   color: white;
   background-color: hsl(217, 100%, 55%);
+  padding: .4em;
 }
 
 .hand.selected {
   background-color: hsl(217, 100%, 35%);
+  top: 0.1em;
+  box-shadow: 0 -0.1em hsla(0, 0%, 0%, 0.4) inset, 
+              0 .2em .3em hsla(0, 0%, 0%, 0.1) inset;
 }
 
 .hand.played {
-  background-color: hsl(0, 0%, 35%);
+  background-color: var(--gray);
 }
 
 .handscore {
@@ -133,7 +143,6 @@ button:hover {
   float: left;
   background-color: hsla(0, 0%, 100%, 0.5);
   border-radius: .2em;
-  box-shadow: 0 1px 4px hsla(0, 0%, 0%, 0.5);
   text-align: center;
   padding: .2em 0 .2em 0;
   transition: all .1s ease-out;
@@ -206,6 +215,11 @@ circle {
 .six>.dot7, .five>.dot7, .four>.dot7, .three>.dot7, .two>.dot7 {
   fill: black;
 }
+
+/* .inactive {
+  box-shadow: inherit;
+  top: 0;
+} */
 
 @keyframes roll{
   0% {
