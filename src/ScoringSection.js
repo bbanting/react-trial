@@ -1,5 +1,35 @@
-import {useState} from "react";
 import {HANDS, STATE, getDiceValues} from "./util";
+
+
+function PlayButton({scores, setScores, dice, setDice, selected, setSelected, setYahtzees, gameState}) {
+  /**The button to confirm a play choice. */
+  function setScore() {
+    if (![STATE.ROLLING, STATE.SCORING].includes(gameState) || selected === null) return;
+
+    let newScores = scores.slice();
+    const diceVals = getDiceValues(dice);
+    const score = HANDS[selected].scoreFunc(diceVals);
+    newScores[selected] = score;
+
+    // Index 11 is yahtzee.
+    if (scores[11] && HANDS[11].scoreFunc(diceVals)) setYahtzees(n => n+1);
+    setScores(newScores);
+    setDice(dice.map(d => ({"value": d.value, "locked": false})));
+    setSelected(null);
+  }
+
+  function canPlay() {
+    return [STATE.ROLLING, STATE.SCORING].includes(gameState) && selected !== null;
+  }
+
+  const buttonClass = `playbtn${canPlay() ? "" : " locked"}`;
+
+  return (
+    <button className={buttonClass} onClick={setScore}>
+      Play
+    </button>
+  );
+}
 
 
 function UpperHands({selected, selectFunc, scores}) {
@@ -41,29 +71,6 @@ function LowerHands({selected, selectFunc, scores}) {
   );
 }
 
-
-function PlayButton({scores, setScores, dice, setDice, selected, setSelected, setYahtzees, gameState}) {
-  /**The button to confirm a play choice. */
-  function setScore() {
-    if (![STATE.ROLLING, STATE.SCORING].includes(gameState) || selected === null) return;
-
-    let newScores = scores.slice();
-    const diceVals = getDiceValues(dice);
-    const score = HANDS[selected].scoreFunc(diceVals);
-    newScores[selected] = score;
-
-    // Index 11 is yahtzee.
-    if (scores[11] && HANDS[11].scoreFunc(diceVals)) setYahtzees(n => n+1);
-    setScores(newScores);
-    setDice(dice.map(d => ({"value": d.value, "locked": false})));
-    setSelected(null);
-  }
-  return (
-    <button className="playbtn" onClick={setScore}>
-      Play
-    </button>
-  );
-}
 
 
 function ScoringSection({selected, setSelected, scores, gameState, yahtzees}) {

@@ -51,18 +51,53 @@ button:hover {
   font-size: 1.5em;
 }
 
+.roll-play-container {
+  display: grid;
+  gap: .5em;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  margin: 1em 0;
+}
+
 .playbtn {
   font-size: 2em;
   padding: .5em;
   background-color: hsl(35, 100%, 50%);
   color: white;
+  width: 100%;
 }
+
+.playbtn.locked, .rollbtn.locked {
+  background-color: hsl(0, 0%, 35%);
+}
+
+/* .inactive {
+  box-shadow: inherit;
+  top: 0;
+} */
 
 .rollbtn {
   font-size: 2em;
   padding: .5em;
   background-color: hsl(35, 100%, 50%);
   color: white;
+  width: 100%;
+}
+
+.rollbtn div {
+  display: inline;
+}
+
+.rollbtn .rolls-left {
+  min-width: 1.6em;
+  height: 1em;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  border-radius: .2em;
+  box-shadow: 0 1px 4px hsla(0, 0%, 0%, 0.2);
+  text-align: center;
+  padding: 0 .25em;
+  transition: all .1s ease-out;
+  margin-right: .2em;
 }
 
 .hand-container {
@@ -84,11 +119,11 @@ button:hover {
   background-color: hsl(217, 100%, 55%);
 }
 
-.selected {
+.hand.selected {
   background-color: hsl(217, 100%, 35%);
 }
 
-.played {
+.hand.played {
   background-color: hsl(0, 0%, 35%);
 }
 

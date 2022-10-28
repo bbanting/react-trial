@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {getDiceValues, range, STATE} from "./util";
+import {STATE} from "./util";
 
 
 const shapeClasses = {
@@ -9,33 +9,6 @@ const shapeClasses = {
   4: "four",
   5: "five",
   6: "six"
-}
-
-
-function DiceSection({ dice, setDice, rolls, gameState }) {
-  /**The section containing the dice and roll button. */
-
-  function setLockFactory(index) {
-    const func = (value) => {
-      if (gameState !== STATE.ROLLING) return;
-      let newDice = dice.slice().map((d) => ({...d, ...{new: false}}));
-      newDice[index] = {...newDice[index], ...{locked: value}};
-      setDice(newDice);
-    }
-    return func;
-  }
-
-  return (
-    <div>
-      <div className="dice-container">
-        {dice.map(
-          (die, i) => <Die 
-              key={i} die={die} 
-              setLock={setLockFactory(i)} rolls={rolls} />
-          )}
-      </div>
-    </div>
-  );
 }
 
 
@@ -74,12 +47,42 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
     setDiceHist(d => d.concat(forHistory));
   }
 
+  function canRoll() {
+    return [STATE.BEGIN, STATE.ROLLING, STATE.PREROLL].includes(gameState);
+  }
+
+  const buttonClass = `rollbtn${canRoll() ? "" : " locked"}`;
   return (
-    <div>
-      <button className="rollbtn" onClick={rollDice}>Roll</button>
-      {rolls} roll{rolls!==1 && "s"} left
-    </div>
+    <button className={buttonClass} onClick={rollDice}>
+      <div className="rolls-left">{rolls}</div>
+      <dive>Roll</dive>
+    </button>
     );
+}
+
+
+function DiceSection({ dice, setDice, rolls, gameState }) {
+  /**The section containing the dice and roll button. */
+
+  function setLockFactory(index) {
+    const func = (value) => {
+      if (gameState !== STATE.ROLLING) return;
+      let newDice = dice.slice().map((d) => ({...d, ...{new: false}}));
+      newDice[index] = {...newDice[index], ...{locked: value}};
+      setDice(newDice);
+    }
+    return func;
+  }
+
+  return (
+    <div className="dice-container">
+      {dice.map(
+        (die, i) => <Die 
+            key={i} die={die} 
+            setLock={setLockFactory(i)} rolls={rolls} />
+        )}
+    </div>
+  );
 }
 
 

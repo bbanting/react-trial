@@ -81,18 +81,20 @@ function Game(props) {
         rolls={rolls} 
         gameState={gameState} 
         />
-      <RollButton 
-        dice={dice} setDice={setDice}
-        setDiceHist={setDiceHist}
-        rolls={rolls} setRolls={setRolls} 
-        gameState={gameState} setGameState={setGameState} 
-        />
-      <PlayButton 
-        scores={scores} setScores={setScores}
-        dice={dice} setDice={setDice}
-        selected={selected} setSelected={setSelected}
-        setYahtzees={setYahtzees} gameState={gameState} 
-        />
+      <div className="roll-play-container">
+        <RollButton 
+          dice={dice} setDice={setDice}
+          setDiceHist={setDiceHist}
+          rolls={rolls} setRolls={setRolls} 
+          gameState={gameState} setGameState={setGameState} 
+          />
+        <PlayButton 
+          scores={scores} setScores={setScores}
+          dice={dice} setDice={setDice}
+          selected={selected} setSelected={setSelected}
+          setYahtzees={setYahtzees} gameState={gameState} 
+          />
+      </div>
       <ScoringSection 
         selected={selected} setSelected={setSelected}
         scores={scores}
