@@ -60,6 +60,15 @@ button:hover {
   color: hsl(0, 0%, 20%)
 }
 
+.sticky-section {
+  position: sticky;
+  background-color: var(--yellow);
+  top: 0;
+  z-index: 5;
+  /* outline: 10px solid var(--yellow); */
+  padding: .05em 0;
+}
+
 .roll-play-container {
   display: grid;
   gap: .5em;
@@ -112,6 +121,8 @@ button:hover {
   grid-template-rows: 1fr 1fr 1fr;
   grid-auto-flow: column;
   gap: .5em;
+  width: 99%;
+  margin: 0 auto;
 }
 
 .lower {

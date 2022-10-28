@@ -76,6 +76,7 @@ function Game(props) {
     <div>
       <NewGameButton resetFunc={newGame} />
       <ScoreDisplay score={getScore()} />
+      <div className="sticky-section">
       <DiceSection 
         dice={dice} setDice={setDice}
         rolls={rolls} 
@@ -94,6 +95,7 @@ function Game(props) {
           selected={selected} setSelected={setSelected}
           setYahtzees={setYahtzees} gameState={gameState} 
           />
+      </div>
       </div>
       <ScoringSection 
         selected={selected} setSelected={setSelected}
