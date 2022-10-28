@@ -73,36 +73,44 @@ function Game(props) {
   }
 
   return (
-    <div>
-      <NewGameButton resetFunc={newGame} />
-      <ScoreDisplay score={getScore()} />
+    <div className="main">
+      <header>
+        <h1>Yahtzee</h1>
+        <ScoreDisplay score={getScore()} />
+      </header>
+
       <div className="sticky-section">
-      <DiceSection 
-        dice={dice} setDice={setDice}
-        rolls={rolls} 
-        gameState={gameState} 
-        />
-      <div className="roll-play-container">
-        <RollButton 
+        <DiceSection 
           dice={dice} setDice={setDice}
-          setDiceHist={setDiceHist}
-          rolls={rolls} setRolls={setRolls} 
-          gameState={gameState} setGameState={setGameState} 
+          rolls={rolls} 
+          gameState={gameState} 
           />
-        <PlayButton 
-          scores={scores} setScores={setScores}
-          dice={dice} setDice={setDice}
-          selected={selected} setSelected={setSelected}
-          setYahtzees={setYahtzees} gameState={gameState} 
-          />
+          
+        <div className="roll-play-container">
+          <RollButton 
+            dice={dice} setDice={setDice}
+            setDiceHist={setDiceHist}
+            rolls={rolls} setRolls={setRolls} 
+            gameState={gameState} setGameState={setGameState} 
+            />
+          <PlayButton 
+            scores={scores} setScores={setScores}
+            dice={dice} setDice={setDice}
+            selected={selected} setSelected={setSelected}
+            setYahtzees={setYahtzees} gameState={gameState} 
+            />
+        </div>
       </div>
-      </div>
+
       <ScoringSection 
         selected={selected} setSelected={setSelected}
         scores={scores}
         gameState={gameState}
         yahtzees={yahtzees}
         />
+
+      <NewGameButton resetFunc={newGame} />
+
       {gameState === STATE.FINISH && 
         <Stats 
           diceHist={diceHist} 
@@ -128,7 +136,7 @@ function NewGameButton({resetFunc}) {
 function ScoreDisplay({score}) {
   /**Displays the current score. */
   return (
-    <div style={{fontSize: "x-large"}}>
+    <div className="score">
       {score}
     </div>
   )
@@ -157,9 +165,7 @@ function Stats({ diceHist, time, score, highscore, resetFunc}) {
 
 function App() {
   return (
-    <div className="main">
-      <Game />
-    </div>
+    <Game />
   );
 }
 

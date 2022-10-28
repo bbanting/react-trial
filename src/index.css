@@ -1,6 +1,8 @@
 :root {
   --yellow: hsl(50, 100%, 50%);
   --gray: hsl(0, 0%, 50%);
+  --blue: hsl(217, 100%, 55%);
+  --darkblue: hsl(217, 100%, 45%);
 }
 
 * {
@@ -21,8 +23,30 @@ body {
   padding: 1em;
 }
 
+header {
+  display: flex;
+}
+
 h1 {
+  color: white;
   margin: 0;
+  font-size: clamp(2em, 12vw, 12em);
+  font-style: italic;
+  text-shadow: 4px 4px black;
+  transform: scale(1.2) perspective(300px) rotateY(18deg) translateX(.75em);
+  flex-grow: 2;
+}
+
+.score {
+  font-size: clamp(2em, 12vw, 12em);
+  font-weight: bold;
+  float: right;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  border-radius: .2em;
+  text-align: center;
+  padding: .5rem;
+  flex-grow: 1;
+  vertical-align: middle;
 }
 
 button {
@@ -65,7 +89,6 @@ button:hover {
   background-color: var(--yellow);
   top: 0;
   z-index: 5;
-  /* outline: 10px solid var(--yellow); */
   padding: .05em 0;
 }
 
@@ -133,12 +156,12 @@ button:hover {
   font-size: 1.5em;
   text-align: right;
   color: white;
-  background-color: hsl(217, 100%, 55%);
+  background-color: var(--blue);
   padding: .4em;
 }
 
 .hand.selected {
-  background-color: hsl(217, 100%, 35%);
+  background-color: var(--darkblue);
   top: 0.1em;
   box-shadow: 0 -0.1em hsla(0, 0%, 0%, 0.4) inset, 
               0 .2em .3em hsla(0, 0%, 0%, 0.1) inset;
