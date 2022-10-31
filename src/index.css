@@ -28,20 +28,20 @@ header {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   align-items: center;
-  margin-bottom: .5em;
 }
 
 h1 {
   color: white;
   margin: 0;
-  font-size: clamp(2.5em, 8vw, 12em);
+  font-size: clamp(2.5em, 8vw, 7em);
   font-style: italic;
   text-shadow: .05em .05em black;
   transform: perspective(300px) rotateY(18deg) translateX(.1em);
+  text-decoration: underline var(--blue) solid, overline var(--blue) solid;
 }
 
 .score {
-  font-size: clamp(2.5em, 8vw, 12em);
+  font-size: clamp(2.5em, 8vw, 7em);
   font-weight: bold;
   margin-left: auto;
   background-color: hsla(0, 0%, 100%, 0.5);
@@ -149,7 +149,7 @@ button:hover {
 .dice-container {
   display: flex;
   gap: 1em;
-  margin-bottom: 1em;
+  margin: .5em 0 1em 0;
 }
 
 .die {

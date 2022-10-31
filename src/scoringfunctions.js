@@ -14,11 +14,10 @@ function nOfKindHandFactory(n, points=0) {
   function func(values) {
     if (!n) return points ? points : values.reduce((a, b) => a+b);
     
-    let found;
     // t is the tolerance for failure.
     for (let t = values.length - n; t>=0; t--) {
-      if ((found = values.filter((v => v === values[t]))).length >= n) {
-        return points ? points : found.reduce((a, b) => a+b);
+      if (values.filter((v => v === values[t])).length >= n) {
+        return points ? points : values.reduce((a, b) => a+b);
       }
     }
     return 0;
@@ -29,7 +28,7 @@ function nOfKindHandFactory(n, points=0) {
 
 function nStraightHandFactory(n, points) {
   function func(values) {
-    let sortedValues = values.sort();
+    let sortedValues = Array.from(new Set(values)).sort();
     // t is the tolerance for failure.
     for (let t = values.length - n; t>=0; t--) {
       const comp = sortedValues[0];
