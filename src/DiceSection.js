@@ -55,7 +55,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
   return (
     <button className={buttonClass} onClick={rollDice}>
       <div className="rolls-left">{rolls}</div>
-      <dive>Roll</dive>
+      <div>Roll</div>
     </button>
     );
 }

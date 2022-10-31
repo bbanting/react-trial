@@ -24,29 +24,32 @@ body {
 }
 
 header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  margin-bottom: .5em;
 }
 
 h1 {
   color: white;
   margin: 0;
-  font-size: clamp(2em, 12vw, 12em);
+  font-size: clamp(2.5em, 8vw, 12em);
   font-style: italic;
-  text-shadow: 4px 4px black;
-  transform: scale(1.2) perspective(300px) rotateY(18deg) translateX(.75em);
-  flex-grow: 2;
+  text-shadow: .05em .05em black;
+  transform: perspective(300px) rotateY(18deg) translateX(.1em);
 }
 
 .score {
-  font-size: clamp(2em, 12vw, 12em);
+  font-size: clamp(2.5em, 8vw, 12em);
   font-weight: bold;
-  float: right;
+  margin-left: auto;
   background-color: hsla(0, 0%, 100%, 0.5);
   border-radius: .2em;
   text-align: center;
-  padding: .5rem;
-  flex-grow: 1;
+  padding: .1em;
   vertical-align: middle;
+  min-width: 2em;
 }
 
 button {
@@ -138,6 +141,50 @@ button:hover {
   margin-right: .2em;
 }
 
+.handtitle {
+  display: inline;
+  vertical-align: middle;
+}
+
+.dice-container {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.die {
+  border-radius: 10%; 
+  box-shadow: 3px 3px hsla(0, 0%, 0%, 0.75);
+  position: relative;
+  top: 0;
+  transition: top .3s ease;
+}
+
+.die:hover {
+  cursor: pointer;
+}
+
+.die.new {
+  animation: roll .2s ease-in-out;
+}
+
+.die > svg {
+  height: 100%;
+  width: 100%;
+  border-radius: 10%;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.die.locked {
+  top: -.5em;
+}
+
+circle {
+  fill: white;
+  transition: all .1s step-end;
+}
+
 .hand-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -180,50 +227,6 @@ button:hover {
   text-align: center;
   padding: .2em 0 .2em 0;
   transition: all .1s ease-out;
-}
-
-.handtitle {
-  display: inline;
-  vertical-align: middle;
-}
-
-.dice-container {
-  display: flex;
-  gap: 1em;
-  margin: 1em 0;
-}
-
-.die {
-  border-radius: 10%; 
-  box-shadow: 3px 3px hsla(0, 0%, 0%, 0.75);
-  position: relative;
-  top: 0;
-  transition: top .3s ease;
-}
-
-.die:hover {
-  cursor: pointer;
-}
-
-.die.new {
-  animation: roll .2s ease-in-out;
-}
-
-.die > svg {
-  height: 100%;
-  width: 100%;
-  border-radius: 10%;
-  background-color: white;
-  box-sizing: border-box;
-}
-
-.die.locked {
-  top: -.5em;
-}
-
-circle {
-  fill: white;
-  transition: all .1s step-end;
 }
 
 .six>.dot1, .five>.dot1, .four>.dot1, .three>.dot1, .two>.dot1 {
