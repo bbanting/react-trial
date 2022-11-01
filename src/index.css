@@ -28,6 +28,8 @@ header {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   align-items: center;
+  position: relative;
+  z-index: 10;
 }
 
 h1 {
@@ -35,23 +37,23 @@ h1 {
   margin: 0;
   font-size: clamp(2.5em, 8vw, 7em);
   font-style: italic;
-  text-shadow: .05em .05em black;
+  text-shadow: .05em .05em black, 0 0 75px hsla(0, 0%, 0%, 0.5);
   transform: perspective(300px) rotateY(18deg) translateX(.1em);
-  text-decoration: underline var(--blue) solid, overline var(--blue) solid;
+  border-bottom: .2em
 }
 
 .score {
   color: white;
   font-size: clamp(2.5em, 8vw, 7em);
   font-weight: bold;
-  text-shadow: .05em .05em black;
+  text-shadow: .05em .05em black, 0 0 75px hsla(0, 0%, 0%, 0.5);
   margin-left: auto;
-  background-color: hsla(0, 0%, 100%, 0.5);
   border-radius: .2em;
-  text-align: center;
+  text-align: right;
   padding: .1em;
   vertical-align: middle;
   min-width: 2em;
+  transform: perspective(300px) rotateY(-18deg) translateX(.1em);
 }
 
 button {
@@ -194,13 +196,30 @@ circle {
   font-weight: bold;
   font-size: 1.5em;
   color: hsl(0, 0%, 35%);
+  text-shadow: 0 0 2em hsla(0, 0%, 0%, 0.7);
 }
 
-.totals p {
+.totals div {
   margin: auto;
-  background-color: hsla(0, 0%, 100%, 0.5);
   border-radius: .5em;
   padding: .2em;
+}
+
+.uptotal {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: none;
+}
+
+.uptotal div {
+  margin: 0;
+}
+
+.bonus {
+  background-color: var(--blue);
+  color: white;
+  animation: pop 1s ease-out;
+  text-align: center;
 }
 
 .hand-container {
@@ -283,6 +302,18 @@ circle {
   top: initial;
   box-shadow: 0 -0.2em hsla(0, 0%, 0%, 0.4) inset,
               0 .2em .3em hsla(0, 0%, 100%, 0.1) inset;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes roll{
