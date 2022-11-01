@@ -51,7 +51,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
     return [STATE.BEGIN, STATE.ROLLING, STATE.PREROLL].includes(gameState);
   }
 
-  const buttonClass = `rollbtn${canRoll() ? "" : " locked"}`;
+  const buttonClass = `rollbtn${canRoll() ? "" : " locked noclick"}`;
   return (
     <button className={buttonClass} onClick={rollDice}>
       <div className="rolls-left">{rolls}</div>

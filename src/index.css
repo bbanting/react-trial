@@ -218,6 +218,10 @@ circle {
   background-color: var(--gray);
 }
 
+.hand.played > .handtitle {
+  color: hsl(0, 0%, 80%);
+}
+
 .handscore {
   min-width: 1.6em;
   height: 1em;
@@ -253,10 +257,11 @@ circle {
   fill: black;
 }
 
-/* .inactive {
-  box-shadow: inherit;
-  top: 0;
-} */
+.noclick:active {
+  top: initial;
+  box-shadow: 0 -0.2em hsla(0, 0%, 0%, 0.4) inset,
+              0 .2em .3em hsla(0, 0%, 100%, 0.1) inset;
+}
 
 @keyframes roll{
   0% {
