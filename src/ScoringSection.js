@@ -36,28 +36,42 @@ function PlayButton({scores, setScores, dice, setDice, selected, setSelected, ya
 }
 
 
-function UpperHands({selected, selectFunc, scores, yahtzees}) {
-  const bonusScore = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0;
+function UpperHands({selected, selectFunc, scores, yahtzees, dice, gameState}) {
+  /**The upper sections of hands. */
+  function getHandScoreDisplay(index) {
+    if (gameState === STATE.BEGIN) {
+      return [" ", "hand"];
+    }
+    const potentialScore = HANDS[index].scoreFunc(diceVals);
+    const preview = (potentialScore && ![STATE.PREROLL, STATE.BEGIN].includes(gameState)) ? potentialScore : " ";
+    const handScore = scores[index] ? scores[index] : preview
+    const className = `hand
+    ${scores[index] ? " played noclick" : ""}
+    ${index == selected ? " selected" : ""}
+    ${yahtzees[index] ? " bonus-yahtzee" : ""}`;
+    return [handScore, className];
+  }
+
+  const diceVals = getDiceValues(dice);
   return (
-    <>
     <div className="hand-container">
       {HANDS.slice(0, 6).map((v, i) => {
-        const classname = `hand${scores[i] !== null ? " played noclick" : ""}${i == selected ? " selected" : ""}${yahtzees[i] ? " bonus-yahtzee" : ""}`;
+        const [handScore, className] = getHandScoreDisplay(i);
         return (
-          <button className={classname} value={i} key={i} onClick={(e) => selectFunc(e.currentTarget.value)}>
-            <div className="handscore">{scores[i] !== null ? scores[i] : " "}</div>
+          <button className={className} value={i} key={i} onClick={(e) => selectFunc(e.currentTarget.value)}>
+            <div className="handscore">{handScore}</div>
             <div className="handtitle">{HANDS[i].name}</div>
           </button>
           )
         }
       )}
     </div>
-    </>
   );
 }
 
 
 function LowerHands({selected, selectFunc, scores, yahtzees}) {
+  /**The lower section of hands. */
   return (
     <div className="hand-container lower">
       {HANDS.slice(6, HANDS.length).map((v, i) => {
@@ -76,6 +90,7 @@ function LowerHands({selected, selectFunc, scores, yahtzees}) {
 
 
 function Totals({scores}) {
+  /**The running totals of both sections. */
   const upTotal = scores.slice(0, 6).reduce((a,b) => a+b);
   const downTotal = scores.slice(6, 14).reduce((a,b) => a+b);
   console.log(upTotal);
@@ -94,7 +109,7 @@ function Totals({scores}) {
 }
 
 
-function ScoringSection({selected, setSelected, scores, gameState, yahtzees}) {
+function ScoringSection({selected, setSelected, scores, gameState, yahtzees, dice}) {
   /**The list of hands that may be selected for scoring. */  
   function select(index) {
     if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
@@ -104,9 +119,9 @@ function ScoringSection({selected, setSelected, scores, gameState, yahtzees}) {
 
   return (
     <>
-      <UpperHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees}/>
+      <UpperHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees} dice={dice} gameState={gameState} />
       <Totals scores={scores} />
-      <LowerHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees} />
+      <LowerHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees} dice={dice} />
     </>
   );
 }

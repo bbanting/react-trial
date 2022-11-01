@@ -109,6 +109,7 @@ function Game(props) {
         scores={scores}
         gameState={gameState}
         yahtzees={yahtzees}
+        dice={dice}
         />
 
       {/* <NewGameButton resetFunc={newGame} /> */}
