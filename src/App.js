@@ -111,7 +111,7 @@ function Game(props) {
         yahtzees={yahtzees}
         />
 
-      <NewGameButton resetFunc={newGame} />
+      {/* <NewGameButton resetFunc={newGame} /> */}
 
       {gameState === STATE.FINISH && 
         <Stats 

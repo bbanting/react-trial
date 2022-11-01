@@ -41,8 +41,10 @@ h1 {
 }
 
 .score {
+  color: white;
   font-size: clamp(2.5em, 8vw, 7em);
   font-weight: bold;
+  text-shadow: .05em .05em black;
   margin-left: auto;
   background-color: hsla(0, 0%, 100%, 0.5);
   border-radius: .2em;
@@ -84,7 +86,7 @@ button:hover {
   padding: .75em;
   font-size: 1.25em;
   background-color: white;
-  color: hsl(0, 0%, 20%)
+  color: hsl(0, 0%, 20%);
 }
 
 .sticky-section {
@@ -183,6 +185,22 @@ button:hover {
 circle {
   fill: white;
   transition: all .1s step-end;
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: .5em 0;
+  font-weight: bold;
+  font-size: 1.5em;
+  color: hsl(0, 0%, 35%);
+}
+
+.totals p {
+  margin: auto;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  border-radius: .5em;
+  padding: .2em;
 }
 
 .hand-container {

@@ -52,7 +52,6 @@ function UpperHands({selected, selectFunc, scores, yahtzees}) {
         }
       )}
     </div>
-    <p>BONUS: {bonusScore}</p>
     </>
   );
 }
@@ -76,6 +75,17 @@ function LowerHands({selected, selectFunc, scores, yahtzees}) {
 }
 
 
+function Totals({scores}) {
+  const upTotal = scores.slice(0, 7).reduce((a,b) => a+b);
+  const downTotal = scores.slice(7, 14).reduce((a,b) => a+b);
+  return (
+    <div className="totals">
+      <p>{upTotal} ▲</p>
+      <p>{downTotal} ▼</p>
+    </div>
+  );
+}
+
 
 function ScoringSection({selected, setSelected, scores, gameState, yahtzees}) {
   /**The list of hands that may be selected for scoring. */  
@@ -88,6 +98,7 @@ function ScoringSection({selected, setSelected, scores, gameState, yahtzees}) {
   return (
     <>
       <UpperHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees}/>
+      <Totals scores={scores} />
       <LowerHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees} />
     </>
   );
