@@ -233,6 +233,10 @@ circle {
   transition: all .1s ease-out;
 }
 
+.bonus-yahtzee .handscore {
+  background-color: var(--yellow);
+}
+
 .six>.dot1, .five>.dot1, .four>.dot1, .three>.dot1, .two>.dot1 {
   fill: black;
 }

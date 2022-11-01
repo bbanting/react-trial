@@ -8,7 +8,7 @@ function Game(props) {
   /**A component to contain the game functionality. */
   const [gameState, setGameState] = useState(STATE.BEGIN);
   const [rolls, setRolls] = useState(3);
-  const [yahtzees, setYahtzees] = useState(0);
+  const [yahtzees, setYahtzees] = useState(range(1, 14).fill(false));
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false, new: false})));
   const [diceHist, setDiceHist] = useState([]);
   const [scores, setScores] = useState(range(1, 14).fill(null));
@@ -54,7 +54,8 @@ function Game(props) {
   }
 
   function getScore() {
-    const extraYahtzeeScore = ((yahtzees-1) > 0) ? ((yahtzees-1) * 50) : 0;
+    const extraYahtzees = yahtzees.filter(n => n === true).length;
+    const extraYahtzeeScore = (extraYahtzees > 0) ? (extraYahtzees * 50) : 0;
     const bonus = (scores.slice(0, 6).reduce((a, b) => a+b) >= 63) ? 35 : 0;
     return scores.reduce((a, b) => a+b) + extraYahtzeeScore + bonus;
   }
@@ -66,7 +67,7 @@ function Game(props) {
   function newGame() {
     changeGameState(STATE.BEGIN);
     setRolls(3);
-    setYahtzees(0);
+    setYahtzees(range(1,14).fill(false));
     setDice(range(1, 6).map(n => ({value: n, locked: false})))
     setScores(scores.fill(null));
     setDiceHist([]);
@@ -97,7 +98,8 @@ function Game(props) {
             scores={scores} setScores={setScores}
             dice={dice} setDice={setDice}
             selected={selected} setSelected={setSelected}
-            setYahtzees={setYahtzees} gameState={gameState} 
+            yahtzees={yahtzees} setYahtzees={setYahtzees} 
+            gameState={gameState} 
             />
         </div>
       </div>
