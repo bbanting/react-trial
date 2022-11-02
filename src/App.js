@@ -74,6 +74,7 @@ function Game(props) {
   }
 
   return (
+    <>
     <div className="main">
       <header>
         <h1>Yahtzee</h1>
@@ -114,15 +115,16 @@ function Game(props) {
 
       {/* <NewGameButton resetFunc={newGame} /> */}
 
-      {gameState === STATE.FINISH && 
-        <Stats 
-          diceHist={diceHist} 
-          time={time} 
-          score={getScore()} highscore={isNewHighscore}
-          resetFunc={newGame}
-          />
-        }
     </div>
+
+    {gameState === STATE.FINISH && <Stats
+      gameState={gameState}
+      diceHist={diceHist} 
+      time={time} 
+      score={getScore()} highscore={isNewHighscore}
+      resetFunc={newGame}
+      />}
+    </>
   );
 }
 
@@ -146,21 +148,24 @@ function ScoreDisplay({score}) {
 }
 
 
-function Stats({ diceHist, time, score, highscore, resetFunc}) {
+function Stats({ gameState, diceHist, time, score, highscore, resetFunc}) {
   /**Displays the stats for the current game. */
   const placeholder = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
   const counts = {...placeholder, ...getCounts(diceHist)};
+  const style = gameState === STATE.FINISH ? {style: {opacity: "100%"}} : {};
 
   return (
-    <div>
-      {highscore() && <p>NEW HIGH SCORE!</p>}
-      <p>Score: {score}</p>
-      {Object.entries(counts).map(c => 
-        <p key={c[0]}>{c[0]}: {c[1]}</p>
-        )}
-      <p>Total rolls: {diceHist ? (diceHist.length / 5) : 0}</p>
-      <p>Total time: {time}</p>
-      <NewGameButton resetFunc={resetFunc} />
+    <div className="stats-overlay">
+      <div className="stats-inner">
+        {highscore() && <p>NEW HIGH SCORE!</p>}
+        <div className="score">{score}</div>
+        {Object.entries(counts).map(c => 
+          <p key={c[0]}>{c[0]}: {c[1]}</p>
+          )}
+        <p>Total rolls: {diceHist ? (diceHist.length / 5) : 0}</p>
+        <p>Total time: {time}</p>
+        <NewGameButton resetFunc={resetFunc} />
+      </div>
     </div>
   )
 }

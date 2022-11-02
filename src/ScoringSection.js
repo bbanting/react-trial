@@ -74,8 +74,6 @@ function Totals({scores}) {
   /**The running totals of both sections. */
   const upTotal = scores.slice(0, 6).reduce((a,b) => a+b);
   const downTotal = scores.slice(6, 14).reduce((a,b) => a+b);
-  console.log(upTotal);
-  console.log(upTotal >= 63);
 
   return (
     <div className="totals">
