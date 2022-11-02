@@ -38,10 +38,8 @@ function PlayButton({scores, setScores, dice, setDice, selected, setSelected, ya
 
 function HandSection({n, offset, selected, selectFunc, scores, yahtzees, dice, gameState}) {
   /**The upper sections of hands. */
+
   function getHandScoreDisplay(index) {
-    if (gameState === STATE.BEGIN) {
-      return [" ", "hand"];
-    }
     const potentialScore = HANDS[index].scoreFunc(diceVals);
     const preview = (potentialScore && ![STATE.PREROLL, STATE.BEGIN].includes(gameState)) ? potentialScore : " ";
     const handScore = scores[index] ? scores[index] : preview
@@ -54,12 +52,13 @@ function HandSection({n, offset, selected, selectFunc, scores, yahtzees, dice, g
 
   const diceVals = getDiceValues(dice);
   const style = {style: {gridTemplateRows: `repeat(${Math.round(n / 2)}, 1fr)`}};
+
   return (
     <div className="hand-container" {...style}>
       {HANDS.slice(0+offset, n+offset).map((v, i) => {
         const [handScore, className] = getHandScoreDisplay(i+offset);
         return (
-          <button className={className} value={i} key={i} onClick={(e) => selectFunc(e.currentTarget.value)}>
+          <button className={className} value={i+offset} key={i} onClick={(e) => selectFunc(e.currentTarget.value)}>
             <div className="handscore">{handScore}</div>
             <div className="handtitle">{HANDS[i+offset].name}</div>
           </button>
