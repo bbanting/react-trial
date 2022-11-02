@@ -1,8 +1,8 @@
 {
-  "name": "react-trial",
+  "name": "react-yahtzee",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bbanting.github.io/react-trial",
+  "homepage": "https://bbanting.github.io/react-yahtzee",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
