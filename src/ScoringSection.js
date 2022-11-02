@@ -36,7 +36,7 @@ function PlayButton({scores, setScores, dice, setDice, selected, setSelected, ya
 }
 
 
-function UpperHands({selected, selectFunc, scores, yahtzees, dice, gameState}) {
+function HandSection({n, offset, selected, selectFunc, scores, yahtzees, dice, gameState}) {
   /**The upper sections of hands. */
   function getHandScoreDisplay(index) {
     if (gameState === STATE.BEGIN) {
@@ -53,33 +53,15 @@ function UpperHands({selected, selectFunc, scores, yahtzees, dice, gameState}) {
   }
 
   const diceVals = getDiceValues(dice);
+  const style = {style: {gridTemplateRows: `repeat(${Math.round(n / 2)}, 1fr)`}};
   return (
-    <div className="hand-container">
-      {HANDS.slice(0, 6).map((v, i) => {
-        const [handScore, className] = getHandScoreDisplay(i);
+    <div className="hand-container" {...style}>
+      {HANDS.slice(0+offset, n+offset).map((v, i) => {
+        const [handScore, className] = getHandScoreDisplay(i+offset);
         return (
           <button className={className} value={i} key={i} onClick={(e) => selectFunc(e.currentTarget.value)}>
             <div className="handscore">{handScore}</div>
-            <div className="handtitle">{HANDS[i].name}</div>
-          </button>
-          )
-        }
-      )}
-    </div>
-  );
-}
-
-
-function LowerHands({selected, selectFunc, scores, yahtzees}) {
-  /**The lower section of hands. */
-  return (
-    <div className="hand-container lower">
-      {HANDS.slice(6, HANDS.length).map((v, i) => {
-        const classname = `hand${scores[i+6] !== null ? " played noclick" : ""}${(i+6) == selected ? " selected" : ""}${yahtzees[i+6] ? " bonus-yahtzee" : ""}`;
-        return (
-          <button className={classname} value={i+6} key={i+6} onClick={(e) => selectFunc(e.currentTarget.value)}>
-            <div className="handscore">{scores[i+6] !== null ? scores[i+6] : " "}</div>
-            <div className="handtitle">{HANDS[i+6].name}</div>
+            <div className="handtitle">{HANDS[i+offset].name}</div>
           </button>
           )
         }
@@ -119,9 +101,19 @@ function ScoringSection({selected, setSelected, scores, gameState, yahtzees, dic
 
   return (
     <>
-      <UpperHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees} dice={dice} gameState={gameState} />
+      <HandSection 
+        n={6} offset={0} 
+        selected={selected} selectFunc={select} 
+        scores={scores} yahtzees={yahtzees} 
+        dice={dice} gameState={gameState} 
+        />
       <Totals scores={scores} />
-      <LowerHands selected={selected} selectFunc={select} scores={scores} yahtzees={yahtzees} dice={dice} />
+      <HandSection 
+        n={7} offset={6} 
+        selected={selected} selectFunc={select} 
+        scores={scores} yahtzees={yahtzees} 
+        dice={dice} gameState={gameState} 
+        />
     </>
   );
 }

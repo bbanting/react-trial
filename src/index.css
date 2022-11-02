@@ -220,15 +220,10 @@ circle {
 .hand-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
   grid-auto-flow: column;
   gap: .5em;
   width: 99%;
   margin: 0 auto;
-}
-
-.lower {
-  grid-template-rows: 1fr 1fr 1fr 1fr;
 }
 
 .hand {
