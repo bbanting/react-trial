@@ -42,9 +42,9 @@ function HandSection({n, offset, selected, selectFunc, scores, yahtzees, dice, g
   function getHandScoreDisplay(index) {
     const potentialScore = HANDS[index].scoreFunc(diceVals);
     const preview = (potentialScore && ![STATE.PREROLL, STATE.BEGIN].includes(gameState)) ? potentialScore : " ";
-    const handScore = scores[index] ? scores[index] : preview
+    const handScore = scores[index] !== null ? scores[index] : preview
     const className = `hand
-    ${scores[index] ? " played noclick" : ""}
+    ${scores[index] !== null ? " played noclick" : ""}
     ${index == selected ? " selected" : ""}
     ${yahtzees[index] ? " bonus-yahtzee" : ""}`;
     return [handScore, className];
