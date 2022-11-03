@@ -158,7 +158,6 @@ button:hover {
 
 .die {
   border-radius: 10%; 
-  box-shadow: 3px 3px hsla(0, 0%, 0%, 0.75);
   position: relative;
   top: 0;
   transition: top .3s ease;
@@ -178,6 +177,7 @@ button:hover {
   border-radius: 10%;
   background-color: white;
   box-sizing: border-box;
+  box-shadow: 3px 3px hsla(0, 0%, 0%, 0.75);
 }
 
 .die.locked {
@@ -286,6 +286,7 @@ circle {
   width: 100%;
   height: 100%;
   background-color: hsla(50, 100%, 50%, 50%);
+  transition: all .5s;
 }
 
 .stats-inner {
@@ -294,16 +295,41 @@ circle {
   box-shadow: .5em .5em black, 0 .5em 1em hsl(0, 0%, 35%);
   padding: 2em;
   border-radius: 2em;
-  /* max-width: 80%; */
+  max-width: clamp(300px, 900px, 90%);
+  box-sizing: border-box;
 }
 
 .stats-inner .score {
   text-align: center;
   transform: none;
+  font-size: clamp(4em, 8vw, 7em);
 }
 
 .stats-inner button {
   margin: 0 auto;
+}
+
+.die-tallies {
+  display: flex;
+  grid-template-rows: 1fr 1fr;
+  gap: .5em 1vw;
+  max-width: 100%;
+}
+
+.die-tallies .die {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.tally {
+  font-size: clamp(1.5em, 2.5vw, 2.5em);
+  text-align: center;
+  text-shadow: .05em .05em 0px hsl(0, 0%, 20%);
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .six>.dot1, .five>.dot1, .four>.dot1, .three>.dot1, .two>.dot1 {
