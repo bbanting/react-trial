@@ -16,7 +16,7 @@ function App() {
   const [scores, setScores] = useState(range(1, 14).fill(null));
   const [selected, setSelected] = useState(null);
   // time stores the start time of the game and, at game finish, the total elapsed time
-  const [time, setTime] = useState(Date.now());
+  const [time, setTime] = useState(null);
   
   const prevGameStateRef = useRef(null);
   const prevHighscoreRef = useRef(getScoreCookie());
@@ -27,33 +27,23 @@ function App() {
   useEffect(() => {
     if (scores.every(s => s !== null)) {
       changeGameState(STATE.FINISH);
-      setTime(t => Math.round((Date.now() - t) / 1000));
     } else if (gameState !== STATE.BEGIN) {
       changeGameState(STATE.PREROLL);
       setRolls(3);
     }
   }, [scores]);
   
-  // Set time and high score at end game.
+  // Set high score at end game.
   useEffect(() => {
     if (gameState != STATE.FINISH) return;
-    setTime(t => Math.round((Date.now() - t) / 1000));
-
     if (isNewHighscore()) setScoreCookie(getScore());
   }, [gameState]);
-
+  
   // Triggers the yahtzee animation when one is rolled.
   useEffect(() => {
     // Index 11 is yahtzee.
     if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
   }, [rolls]);
-
-  // Starts the timer.
-  useEffect(() => {
-    if (prevGameStateRef.current === STATE.BEGIN) {
-      setTime(Date.now());
-    }
-  }, [gameState]);
 
   function changeGameState(newState) {
     prevGameStateRef.current = gameState;
@@ -101,14 +91,15 @@ function App() {
             dice={dice} setDice={setDice}
             setDiceHist={setDiceHist}
             rolls={rolls} setRolls={setRolls} 
-            gameState={gameState} setGameState={setGameState} 
+            gameState={gameState} setGameState={setGameState}
+            prevState={prevGameStateRef} setTime={setTime}
             />
           <PlayButton 
             scores={scores} setScores={setScores}
             dice={dice} setDice={setDice}
             selected={selected} setSelected={setSelected}
             yahtzees={yahtzees} setYahtzees={setYahtzees} 
-            gameState={gameState} 
+            gameState={gameState} setTime={setTime}
             />
         </div>
       </div>

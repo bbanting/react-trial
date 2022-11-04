@@ -1,10 +1,18 @@
 import {HANDS, STATE, getDiceValues} from "../util";
 
 
-function PlayButton({scores, setScores, dice, setDice, selected, setSelected, yahtzees, setYahtzees, gameState}) {
+function PlayButton({scores, setScores, dice, setDice, selected, setSelected, yahtzees, setYahtzees, gameState, setTime}) {
   /**The button to confirm a play choice. */
+
+  function lastPlay() {
+    return scores.filter(s => s === null).length === 1;
+  }
+  
   function setScore() {
     if (![STATE.ROLLING, STATE.SCORING].includes(gameState) || selected === null) return;
+
+    // Stop the timer.
+    if (lastPlay()) setTime(t => Math.round((Date.now() - t) / 1000));
 
     let newScores = scores.slice();
     const diceVals = getDiceValues(dice);

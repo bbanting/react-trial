@@ -12,7 +12,7 @@ const shapeClasses = {
 }
 
 
-function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState }) {
+function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState, prevState, setTime}) {
   /**The button the user clicks to roll the dice. */
   useEffect(() => {
     if (rolls < 1) {
@@ -28,8 +28,9 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
   function rollDice() {
     if ([STATE.SCORING, STATE.FINISH].includes(gameState)) return;
     if ([STATE.BEGIN, STATE.PREROLL].includes(gameState)) setGameState(STATE.ROLLING);
-    
-    if (rolls < 1) setRolls(3);
+
+    // Start the timer.
+    if (gameState === STATE.BEGIN) setTime(Date.now());
     
     const newDice = [];
     const forHistory = [];

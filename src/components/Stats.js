@@ -19,8 +19,8 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
           {Object.values(counts)
             .map((count, i) => {
               return (
-                <div>
-                <div key={i} className="die">
+                <div key={i}>
+                <div className="die">
                   <svg 
                     className={dieClassNames[i]} 
                     width="250" height="250" 
@@ -49,7 +49,7 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
             </div>
             <div className="stat">
               <p>Total time</p>
-              <p>{time / 1000}s</p> {/**write a time display func */}
+              <p>{time}s</p> {/**write a time display func */}
             </div>
           </div>
   
