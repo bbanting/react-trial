@@ -358,7 +358,7 @@ circle {
   text-transform: uppercase;
   font-weight: bold;
   background-color: black;
-  padding: 1px;
+  padding: 0 5px;
 }
 
 .hidden {

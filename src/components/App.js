@@ -19,6 +19,7 @@ function App() {
   const [time, setTime] = useState(Date.now());
   
   const prevGameStateRef = useRef(null);
+  const prevHighscoreRef = useRef(getScoreCookie());
 
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
@@ -33,17 +34,21 @@ function App() {
     }
   }, [scores]);
   
+  // Set time and high score at end game.
   useEffect(() => {
     if (gameState != STATE.FINISH) return;
     setTime(t => Math.round((Date.now() - t) / 1000));
+
     if (isNewHighscore()) setScoreCookie(getScore());
   }, [gameState]);
 
+  // Triggers the yahtzee animation when one is rolled.
   useEffect(() => {
     // Index 11 is yahtzee.
     if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
   }, [rolls]);
 
+  // Starts the timer.
   useEffect(() => {
     if (prevGameStateRef.current === STATE.BEGIN) {
       setTime(Date.now());
@@ -63,10 +68,11 @@ function App() {
   }
   
   function isNewHighscore() {
-    return getScore() > getScoreCookie();
+    return getScore() > prevHighscoreRef.current;
   }
 
   function newGame() {
+    prevHighscoreRef.current = getScore();
     changeGameState(STATE.BEGIN);
     setRolls(3);
     setYahtzees(range(1,14).fill(false));
@@ -117,7 +123,7 @@ function App() {
 
     </div>
 
-    {gameState && <Stats
+    {gameState === STATE.FINISH && <Stats
       gameState={gameState}
       diceHist={diceHist} 
       time={time} 

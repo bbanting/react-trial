@@ -13,7 +13,7 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
       <div className="stats-overlay">
         <div className="stats-inner">
           <div className="score">{score}</div>
-          {1 && <p className="highscore-note">HIGH SCORE!</p>} {/**isHighscore needs to get fixed */}
+          {isHighscore() && <p className="highscore-note">HIGH SCORE!</p>}
   
           <div className="die-tallies">
           {Object.values(counts)
