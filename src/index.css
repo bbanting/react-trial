@@ -338,6 +338,8 @@ circle {
 }
 
 .misc-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   font-size: 1.25em;
   margin: 2em 0;
   font-style: italic;
@@ -441,5 +443,9 @@ circle {
 
   .main {
     width: 100%;
+  }
+
+  .misc-stats {
+    display: block;
   }
 }

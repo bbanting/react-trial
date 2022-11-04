@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {STATE} from "./util";
+import {STATE} from "../util";
 
 
 const shapeClasses = {

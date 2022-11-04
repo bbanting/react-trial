@@ -1,4 +1,4 @@
-import {HANDS, STATE, getDiceValues} from "./util";
+import {HANDS, STATE, getDiceValues} from "../util";
 
 
 function PlayButton({scores, setScores, dice, setDice, selected, setSelected, yahtzees, setYahtzees, gameState}) {
