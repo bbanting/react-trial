@@ -159,7 +159,7 @@ function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc}) {
     <div className="stats-overlay">
       <div className="stats-inner">
         <div className="score">{score}</div>
-        {isHighscore() && <p>NEW HIGH SCORE!</p>}
+        {1 && <p className="highscore-note">HIGH SCORE!</p>} {/**isHighscore needs to get fixed */}
 
         <div className="die-tallies">
         {Object.values(counts)
@@ -188,8 +188,17 @@ function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc}) {
         })}
         </div>
 
-        <p>Total rolls: {diceHist ? (diceHist.length / 5) : 0}</p>
-        <p>Total time: {time}</p>
+        <div className="misc-stats">
+          <div className="stat">
+            <p>Total rolls</p>
+            <p>{diceHist ? (diceHist.length / 5) : 0}</p> {/*fix this*/}
+          </div>
+          <div className="stat">
+            <p>Total time</p>
+            <p>{time / 1000}s</p> {/**write a time display func */}
+          </div>
+        </div>
+
         <NewGameButton resetFunc={resetFunc} />
       </div>
     </div>

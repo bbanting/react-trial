@@ -309,11 +309,21 @@ circle {
   margin: 0 auto;
 }
 
+.highscore-note {
+  color: orange;
+  font-weight: bold;
+  font-size: 2em;
+  text-shadow: .05em .05em .1em hsl(0, 0%, 35%);
+  width: fit-content;
+  margin: 0 auto;
+  animation: pop 1s ease infinite;
+}
+
 .die-tallies {
   display: flex;
-  grid-template-rows: 1fr 1fr;
   gap: .5em 1vw;
   max-width: 100%;
+  margin-top: 1em;
 }
 
 .die-tallies .die {
@@ -325,6 +335,28 @@ circle {
   font-size: clamp(1.5em, 2.5vw, 2.5em);
   text-align: center;
   text-shadow: .05em .05em 0px hsl(0, 0%, 20%);
+}
+
+.misc-stats {
+  font-size: 1.25em;
+  margin: 2em 0;
+  font-style: italic;
+}
+
+.stat {
+  margin-bottom: .5em;
+}
+
+.stat > p {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.stat p:first-child {
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: black;
+  padding: 1px;
 }
 
 .hidden {
