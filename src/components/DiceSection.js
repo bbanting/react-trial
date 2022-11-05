@@ -37,9 +37,9 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
   }
 
   function rollDice() {
-    if ([STATE.SCORING, STATE.FINISH].includes(gameState)) return;
+    if (!canRoll()) return;
     if ([STATE.BEGIN, STATE.PREROLL].includes(gameState)) setGameState(STATE.ROLLING);
-
+    
     // Start the timer.
     if (gameState === STATE.BEGIN) setTime(Date.now());
     
@@ -59,8 +59,9 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
     setTotalRolls(n => n + 1);
     setDiceHist(d => d.concat(forHistory));
   }
-
+  
   function canRoll() {
+    if (dice.every((d => d.locked))) return false;
     return [STATE.BEGIN, STATE.ROLLING, STATE.PREROLL].includes(gameState);
   }
 
