@@ -12,7 +12,7 @@ const shapeClasses = {
 }
 
 
-function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, setGameState, prevState, setTime}) {
+function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls, gameState, setGameState, prevState, setTime}) {
   /**The button the user clicks to roll the dice. */
   useEffect(() => {
     if (rolls < 1) {
@@ -56,6 +56,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
     }
     setDice(newDice);
     setRolls(n => n - 1);
+    setTotalRolls(n => n + 1);
     setDiceHist(d => d.concat(forHistory));
   }
 

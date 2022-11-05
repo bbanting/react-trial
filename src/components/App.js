@@ -7,9 +7,9 @@ import ScoreDisplay from "./ScoreDisplay";
 
 
 function App() {
-  /**A component to contain the game functionality. */
   const [gameState, setGameState] = useState(STATE.BEGIN);
   const [rolls, setRolls] = useState(3);
+  const [totalRolls, setTotalRolls] = useState(0);
   const [yahtzees, setYahtzees] = useState(range(1, 14).fill(false));
   const [dice, setDice] = useState(range(1, 6).map(n => ({value: n, locked: false, new: false})));
   const [diceHist, setDiceHist] = useState([]);
@@ -65,6 +65,7 @@ function App() {
     prevHighscoreRef.current = getScore();
     changeGameState(STATE.BEGIN);
     setRolls(3);
+    setTotalRolls(0);
     setYahtzees(range(1,14).fill(false));
     setDice(range(1, 6).map(n => ({value: n, locked: false})))
     setScores(scores.fill(null));
@@ -90,7 +91,7 @@ function App() {
           <RollButton 
             dice={dice} setDice={setDice}
             setDiceHist={setDiceHist}
-            rolls={rolls} setRolls={setRolls} 
+            rolls={rolls} setRolls={setRolls} setTotalRolls={setTotalRolls}
             gameState={gameState} setGameState={setGameState}
             prevState={prevGameStateRef} setTime={setTime}
             />
@@ -120,6 +121,7 @@ function App() {
       time={time} 
       score={getScore()} isHighscore={isNewHighscore}
       resetFunc={newGame}
+      totalRolls={totalRolls}
       />}
     </>
   );

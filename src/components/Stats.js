@@ -2,7 +2,7 @@ import {STATE, getCounts} from "../util";
 import NewGameButton from "./NewGameButton";
 
 
-export default function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc}) {
+export default function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc, totalRolls}) {
     /**Displays the stats for the current game. */
     const placeholder = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
     const counts = {...placeholder, ...getCounts(diceHist)};
@@ -45,7 +45,7 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
           <div className="misc-stats">
             <div className="stat">
               <p>Total rolls</p>
-              <p>{diceHist ? (diceHist.length / 5) : 0}</p> {/*fix this*/}
+              <p>{totalRolls}</p>
             </div>
             <div className="stat">
               <p>Total time</p>

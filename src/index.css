@@ -442,16 +442,9 @@ circle {
 }
 
 @keyframes attention {
-  0% {
- 
-  }
   50% {
     transform: scale(1.04);
   } 
-  100% {
-
-
-  }
 }
 
 @media(max-width: 700px) {
