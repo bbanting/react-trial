@@ -21,6 +21,17 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
     }
   }, [rolls]);
 
+  useEffect(() => {
+    if (gameState === STATE.BEGIN) {
+      const timeout = setTimeout(() => buttonRef.current.classList.add("attention"), 5000);
+      return () => clearTimeout(timeout);
+    } else if (prevState.current === STATE.BEGIN) {
+      buttonRef.current.classList.remove("attention");
+    }
+  }, [gameState]);
+
+  const buttonRef = useRef(null);
+
   function getDieRoll() {
     return Math.trunc(Math.random() * 6) + 1;
   }
@@ -54,7 +65,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, gameState, se
 
   const buttonClass = `rollbtn${canRoll() ? "" : " locked noclick"}`;
   return (
-    <button className={buttonClass} onClick={rollDice}>
+    <button ref={buttonRef} className={buttonClass} onClick={rollDice}>
       <div className="rolls-left">{rolls}</div>
       <div>Roll</div>
     </button>

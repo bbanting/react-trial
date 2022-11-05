@@ -127,6 +127,8 @@ button:hover {
 }
 
 .rollbtn {
+  position: relative;
+  z-index: 1;
   font-size: 2em;
   padding: .5em;
   background-color: hsl(35, 100%, 50%);
@@ -148,6 +150,10 @@ button:hover {
   padding: 0 .25em;
   transition: all .1s ease-out;
   margin-right: .2em;
+}
+
+.attention {
+  animation: attention 1s infinite ease-in-out;
 }
 
 .dice-container {
@@ -432,6 +438,19 @@ circle {
   100% {
     top: -10px;
     transform: scale(1.01);
+  }
+}
+
+@keyframes attention {
+  0% {
+ 
+  }
+  50% {
+    transform: scale(1.04);
+  } 
+  100% {
+
+
   }
 }
 

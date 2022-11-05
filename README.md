@@ -4,8 +4,8 @@ My first react project. A web version of a favourite game. See the most recent d
 
 ## TODO:
 - Yahtzee animation?
-- Fix timer (or delete timer?)
 - Prevent accidental double-click on roll
-- "click roll" indicator
 - phone zoom in bug?
 - prevent roll when all dice locked
+- stats overlay animation
+- fix roll counting

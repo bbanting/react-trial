@@ -18,7 +18,7 @@ function App() {
   // time stores the start time of the game and, at game finish, the total elapsed time
   const [time, setTime] = useState(null);
   
-  const prevGameStateRef = useRef(null);
+  const prevGameStateRef = useRef(STATE.BEGIN);
   const prevHighscoreRef = useRef(getScoreCookie());
 
   // This checks if the game is finished after scoring or moves
