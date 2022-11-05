@@ -4,6 +4,5 @@ My first react project. A web version of a favourite game. See the most recent d
 
 ## TODO:
 - Yahtzee animation?
-- Prevent accidental double-click on roll
 - phone zoom in bug?
 - stats overlay animation

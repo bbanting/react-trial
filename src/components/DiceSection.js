@@ -14,13 +14,14 @@ const shapeClasses = {
 
 function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls, gameState, setGameState, prevState, setTime}) {
   /**The button the user clicks to roll the dice. */
+
   useEffect(() => {
     if (rolls < 1) {
       setGameState(STATE.SCORING);
       setDice(dice.map(d => ({...d, ...{locked: false}})));
     }
   }, [rolls]);
-
+  
   useEffect(() => {
     if (gameState === STATE.BEGIN) {
       const timeout = setTimeout(() => buttonRef.current.classList.add("attention"), 5000);
@@ -29,8 +30,9 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
       buttonRef.current.classList.remove("attention");
     }
   }, [gameState]);
-
+  
   const buttonRef = useRef(null);
+  const clickTimeRef = useRef(0);
 
   function getDieRoll() {
     return Math.trunc(Math.random() * 6) + 1;
@@ -38,6 +40,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
 
   function rollDice() {
     if (!canRoll()) return;
+    if (!checkTimer()) return;
     if ([STATE.BEGIN, STATE.PREROLL].includes(gameState)) setGameState(STATE.ROLLING);
     
     // Start the timer.
@@ -60,6 +63,16 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
     setDiceHist(d => d.concat(forHistory));
   }
   
+  function checkTimer() {
+    /**Checks that the button isn't clicked too fast.
+     * Returns true and resets timer if click is valid */
+    if ((Date.now() - clickTimeRef.current) > 500) {
+      clickTimeRef.current = Date.now();
+      return true;
+    }
+    return false;
+  }
+
   function canRoll() {
     if (dice.every((d => d.locked))) return false;
     return [STATE.BEGIN, STATE.ROLLING, STATE.PREROLL].includes(gameState);
