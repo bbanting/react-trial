@@ -7,10 +7,10 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
     const placeholder = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
     const counts = {...placeholder, ...getCounts(diceHist)};
     const dieClassNames = ["one", "two", "three", "four", "five", "six"];
-    const style = gameState === STATE.FINISH ? {style: {opacity: "100%"}} : {};
+    const className = `stats-overlay${gameState === STATE.FINISH ? "" : " hidden"}`;
   
     return (
-      <div className="stats-overlay">
+      <div className={className}>
         <div className="stats-inner">
           <div className="score">{score}</div>
           {isHighscore() && <p className="highscore-note">HIGH SCORE!</p>}
@@ -47,10 +47,12 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
               <p>Total rolls</p>
               <p>{totalRolls}</p>
             </div>
+            {gameState === STATE.FINISH && 
             <div className="stat">
               <p>Total time</p>
               <p>{time}s</p> {/**write a time display func */}
             </div>
+            }
           </div>
   
           <NewGameButton resetFunc={resetFunc} />

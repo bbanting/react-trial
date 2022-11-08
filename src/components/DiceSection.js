@@ -35,6 +35,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
   const clickTimeRef = useRef(0);
 
   function getDieRoll() {
+    // return 5;
     return Math.trunc(Math.random() * 6) + 1;
   }
 
@@ -113,6 +114,27 @@ function DiceSection({ dice, setDice, rolls, gameState }) {
 }
 
 
+function DieSVG(props) {
+  return (
+  <svg 
+    {...props} 
+    width="250" height="250" 
+    viewBox="0 0 250 250" 
+    fill="none" xmlns="http://www.w3.org/2000/svg"
+    >
+    <rect id="Square" width="250" height="250" rx="20"/>
+    <circle className="dot1" cx="60" cy="53" r="25"/>
+    <circle className="dot2" cx="189" cy="53" r="25"/>
+    <circle className="dot3" cx="60" cy="125" r="25"/> 
+    <circle className="dot4" cx="125" cy="125" r="25"/>
+    <circle className="dot5" cx="189" cy="125" r="25"/>
+    <circle className="dot6" cx="60" cy="197" r="25"/>
+    <circle className="dot7" cx="189" cy="197" r="25"/>
+  </svg>
+  )
+}
+
+
 function Die({ die, setLock, rolls }) {
   /**A single die in the game. */
   const dieClass = `die${die.locked ? " locked" : ""}`;
@@ -132,24 +154,11 @@ function Die({ die, setLock, rolls }) {
       className={dieClass} 
       style={dieStyle} 
       onClick={() => setLock(!die.locked)}>
-      <svg 
-        className={shapeClass} 
-        width="250" height="250" 
-        viewBox="0 0 250 250" 
-        fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect id="Square" width="250" height="250" rx="20"/>
-        <circle className="dot1" style={shapeStyle} cx="60" cy="53" r="25"/>
-        <circle className="dot2" style={shapeStyle} cx="189" cy="53" r="25"/>
-        <circle className="dot3" style={shapeStyle} cx="60" cy="125" r="25"/> 
-        <circle className="dot4" style={shapeStyle} cx="125" cy="125" r="25"/>
-        <circle className="dot5" style={shapeStyle} cx="189" cy="125" r="25"/>
-        <circle className="dot6" style={shapeStyle} cx="60" cy="197" r="25"/>
-        <circle className="dot7" style={shapeStyle} cx="189" cy="197" r="25"/>
-      </svg>
+      <DieSVG className={shapeClass} style={shapeStyle} />
     </div>
   );
 }
 
 
-export {RollButton};
+export {RollButton, DieSVG};
 export default DiceSection;

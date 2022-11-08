@@ -4,6 +4,7 @@ import DiceSection, {RollButton} from './DiceSection';
 import ScoringSection, {PlayButton} from "./ScoringSection";
 import Stats from "./Stats";
 import ScoreDisplay from "./ScoreDisplay";
+import Celebration from './Celebration';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   
   const prevGameStateRef = useRef(STATE.BEGIN);
   const prevHighscoreRef = useRef(getScoreCookie());
+  const celebrationRef = useRef(null);
 
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
@@ -42,7 +44,11 @@ function App() {
   // Triggers the yahtzee animation when one is rolled.
   useEffect(() => {
     // Index 11 is yahtzee.
-    if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) window.alert("YAHTZEE!");
+    if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) {
+      celebrationRef.current.classList.remove("hidden");
+      const timeout = setTimeout(() => celebrationRef.current.classList.add("hidden"), 3000)
+      return () => clearTimeout(timeout);
+    };
   }, [rolls]);
 
   function changeGameState(newState) {
@@ -115,14 +121,16 @@ function App() {
 
     </div>
 
-    {gameState === STATE.FINISH && <Stats
+    <Celebration celeRef={celebrationRef} dice={dice}/>
+
+    <Stats
       gameState={gameState}
       diceHist={diceHist} 
       time={time} 
       score={getScore()} isHighscore={isNewHighscore}
       resetFunc={newGame}
       totalRolls={totalRolls}
-      />}
+      />
     </>
   );
 }
