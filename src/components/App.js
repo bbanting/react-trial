@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {STATE, HANDS, range, getDiceValues, getScoreCookie, setScoreCookie} from "../util";
+import {STATE, HANDS, TRAN, range, getDiceValues, getScoreCookie, setScoreCookie} from "../util";
 import DiceSection, {RollButton} from './DiceSection';
 import ScoringSection, {PlayButton} from "./ScoringSection";
 import Stats from "./Stats";
@@ -18,10 +18,11 @@ function App() {
   const [selected, setSelected] = useState(null);
   // time stores the start time of the game and, at game finish, the total elapsed time
   const [time, setTime] = useState(null);
+
+  const [yahtzeeCeleState, setYahtzeeCeleState] = useState(TRAN.HIDDEN);
   
   const prevGameStateRef = useRef(STATE.BEGIN);
   const prevHighscoreRef = useRef(getScoreCookie());
-  const celebrationRef = useRef(null);
 
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
@@ -44,10 +45,12 @@ function App() {
   // Triggers the yahtzee animation when one is rolled.
   useEffect(() => {
     // Index 11 is yahtzee.
+    if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
     if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) {
-      celebrationRef.current.classList.remove("hidden");
-      const timeout = setTimeout(() => celebrationRef.current.classList.add("hidden"), 3000)
-      return () => clearTimeout(timeout);
+      setYahtzeeCeleState(TRAN.ENTER);
+      const timeout1 = setTimeout(() => setYahtzeeCeleState(TRAN.EXIT), 3000);
+      const timeout2 = setTimeout(() => setYahtzeeCeleState(TRAN.HIDDEN), 5000);
+      return () => {clearTimeout(timeout1); clearTimeout(timeout2);}
     };
   }, [rolls]);
 
@@ -121,7 +124,7 @@ function App() {
 
     </div>
 
-    <Celebration celeRef={celebrationRef} dice={dice}/>
+    <Celebration tranState={yahtzeeCeleState} dice={dice}/>
 
     <Stats
       gameState={gameState}

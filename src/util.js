@@ -12,6 +12,11 @@ export const STATE = {
   FINISH: 5
 };
 
+export const TRAN = {
+  HIDDEN: 0,
+  ENTER: 1,
+  EXIT: 2
+}
 
 export const HANDS = [
   {name: "Aces", scoreFunc: handAces},

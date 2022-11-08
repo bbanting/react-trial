@@ -35,7 +35,6 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
   const clickTimeRef = useRef(0);
 
   function getDieRoll() {
-    // return 5;
     return Math.trunc(Math.random() * 6) + 1;
   }
 
@@ -160,5 +159,5 @@ function Die({ die, setLock, rolls }) {
 }
 
 
-export {RollButton, DieSVG};
+export {RollButton, DieSVG, shapeClasses};
 export default DiceSection;

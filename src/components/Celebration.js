@@ -1,10 +1,12 @@
-import {DieSVG} from "./DiceSection";
+import {DieSVG, shapeClasses} from "./DiceSection";
+import {TRAN} from "../util.js";
 
 
-export default function Celebration({celeRef, dice}) {
+export default function Celebration({tranState, dice}) {
   /**The celebration animation that runs when user rolls a yahtzee. */
+  const stateClass = Object.entries(TRAN)[tranState][0].toLowerCase();
   return (
-    <div ref={celeRef} className="cele hidden">
+    <div className={`cele ${stateClass}`}>
       <div className="bg">
         <div key={Math.random()}></div>
         <div key={Math.random()}></div>
@@ -14,7 +16,7 @@ export default function Celebration({celeRef, dice}) {
           const style = {style: {animationDelay: `${Math.random()}s`}}
           return (
           <div key={Math.random()} className="die" {...style}>
-            <DieSVG className="six" />
+            <DieSVG className={shapeClasses[dice[0].value]} />
           </div>
         )
         })}

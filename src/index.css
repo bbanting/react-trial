@@ -377,7 +377,6 @@ circle {
   left: 0;
   font-size: calc(100vw / 6);
   font-weight: 900;
-  transition: opacity 1s;
 }
 
 .cele .bg {
@@ -394,14 +393,17 @@ circle {
 .cele .bg div:first-child {
   background-color: var(--blue);
   position: relative;
-  animation: slide-from-top .5s;
 }
 
 .cele .bg div:last-child {
   background-color: var(--yellow);
   position: relative;
-  animation: slide-from-bottom .5s;
 }
+
+.cele.enter .bg div:first-child {animation: slide-from-top .5s both;}
+.cele.enter .bg div:last-child {animation: slide-from-bottom .5s both;}
+.cele.exit .bg div:first-child {animation: slide-from-top 1s reverse both;}
+.cele.exit .bg div:last-child {animation: slide-from-bottom 1s reverse both;}
 
 .cele .text {
   position: fixed;
@@ -413,9 +415,8 @@ circle {
   align-items: center;
 }
 
-.cele .letter {
-  animation: celebrate .5s ease-in-out backwards;
-}
+.cele.enter .letter {animation: celebrate .5s ease-in-out backwards;}
+.cele.exit .letter {animation: celebrate .5s reverse ease-in-out both;}
 
 .dice-effect {
   position: fixed;
@@ -427,41 +428,30 @@ circle {
   height: 100%;
 }
 
-.dice-effect .die {
+.cele .die {
   position: relative;
   width: .5em;
   height: .5em;
-  animation: drop .5s ease-in-out both;
 }
+
+.cele.enter .die {animation: drop .5s ease-in-out both;}
+.cele.exit .die {animation: drop .3s reverse ease-in-out both;}
 
 .hidden {
-  opacity: 0;
-  pointer-events: none;
+  display: none;
 }
 
-.six>.dot1, .five>.dot1, .four>.dot1, .three>.dot1, .two>.dot1 {
-  fill: black;
-}
+.six>.dot1, .five>.dot1, .four>.dot1, .three>.dot1, .two>.dot1 {fill: black;}
 
-.six>.dot2, .five>.dot2, .four>.dot2 {
-  fill: black;
-}
+.six>.dot2, .five>.dot2, .four>.dot2 {fill: black;}
 
-.six>.dot3, .six>.dot5 {
-  fill: black;
-}
+.six>.dot3, .six>.dot5 {fill: black;}
 
-.five>.dot4, .three>.dot4, .one>.dot4 {
-  fill: black;
-}
+.five>.dot4, .three>.dot4, .one>.dot4 {fill: black;}
 
-.six>.dot6, .five>.dot6, .four>.dot6 {
-  fill: black;
-}
+.six>.dot6, .five>.dot6, .four>.dot6 {fill: black;}
 
-.six>.dot7, .five>.dot7, .four>.dot7, .three>.dot7, .two>.dot7 {
-  fill: black;
-}
+.six>.dot7, .five>.dot7, .four>.dot7, .three>.dot7, .two>.dot7 {fill: black;}
 
 .noclick:active {
   top: initial;
