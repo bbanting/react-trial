@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {DieSVG, shapeClasses} from "./DiceSection";
 import {TRAN, STATE} from "../util.js";
 
@@ -6,21 +6,26 @@ import {TRAN, STATE} from "../util.js";
 export default function Celebration({rolls, gameState, dice, yahtzeeWasRolled}) {
   /**The celebration animation that runs when user rolls a yahtzee. */
   const [tranState, setTranState] = useState(TRAN.HIDDEN);
+  const transStateRef = useRef(null);
+
+  function updateTranState(value) {
+    transStateRef.current = value;
+    setTranState(value);
+  }
 
   useEffect(() => {
-    // Index 11 is yahtzee.
     if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
     if (yahtzeeWasRolled()) {
-      setTranState(TRAN.ENTER);
-      const timeout1 = setTimeout(() => setTranState(TRAN.EXIT), 3000);
-      const timeout2 = setTimeout(() => setTranState(TRAN.HIDDEN), 5000);
+      updateTranState(TRAN.ENTER);
+      const timeout1 = setTimeout(() => {if (transStateRef.current === TRAN.ENTER) updateTranState(TRAN.EXIT)}, 3000);
+      const timeout2 = setTimeout(() => updateTranState(TRAN.HIDDEN), 5000);
       return () => {clearTimeout(timeout1); clearTimeout(timeout2);}
     };
   }, [rolls]);
 
   const stateClass = Object.entries(TRAN)[tranState][0].toLowerCase();
   return (
-    <div className={`cele ${stateClass}`}>
+    <div className={`cele ${stateClass}`} onClick={() => updateTranState(TRAN.HIDDEN)}>
       <div className="bg">
         <div key={Math.random()}></div>
         <div key={Math.random()}></div>
