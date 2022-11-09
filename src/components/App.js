@@ -18,8 +18,6 @@ function App() {
   const [selected, setSelected] = useState(null);
   // time stores the start time of the game and, at game finish, the total elapsed time
   const [time, setTime] = useState(null);
-
-  const [yahtzeeCeleState, setYahtzeeCeleState] = useState(TRAN.HIDDEN);
   
   const prevGameStateRef = useRef(STATE.BEGIN);
   const prevHighscoreRef = useRef(getScoreCookie());
@@ -41,18 +39,6 @@ function App() {
     if (gameState != STATE.FINISH) return;
     if (isNewHighscore()) setScoreCookie(getScore());
   }, [gameState]);
-  
-  // Triggers the yahtzee animation when one is rolled.
-  useEffect(() => {
-    // Index 11 is yahtzee.
-    if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
-    if (scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice))) {
-      setYahtzeeCeleState(TRAN.ENTER);
-      const timeout1 = setTimeout(() => setYahtzeeCeleState(TRAN.EXIT), 3000);
-      const timeout2 = setTimeout(() => setYahtzeeCeleState(TRAN.HIDDEN), 5000);
-      return () => {clearTimeout(timeout1); clearTimeout(timeout2);}
-    };
-  }, [rolls]);
 
   function changeGameState(newState) {
     prevGameStateRef.current = gameState;
@@ -66,6 +52,11 @@ function App() {
     return scores.reduce((a, b) => a+b) + extraYahtzeeScore + bonus;
   }
   
+  
+  function yahtzeeWasRolled() {
+    return scores[11] !== 0 && HANDS[11].scoreFunc(getDiceValues(dice));
+  }
+
   function isNewHighscore() {
     return getScore() > prevHighscoreRef.current;
   }
@@ -124,7 +115,7 @@ function App() {
 
     </div>
 
-    <Celebration tranState={yahtzeeCeleState} dice={dice}/>
+    <Celebration rolls={rolls} gameState={gameState} dice={dice} yahtzeeWasRolled={yahtzeeWasRolled} />
 
     <Stats
       gameState={gameState}

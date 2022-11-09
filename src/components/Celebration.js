@@ -1,9 +1,23 @@
+import {useState, useEffect} from "react";
 import {DieSVG, shapeClasses} from "./DiceSection";
-import {TRAN} from "../util.js";
+import {TRAN, STATE} from "../util.js";
 
 
-export default function Celebration({tranState, dice}) {
+export default function Celebration({rolls, gameState, dice, yahtzeeWasRolled}) {
   /**The celebration animation that runs when user rolls a yahtzee. */
+  const [tranState, setTranState] = useState(TRAN.HIDDEN);
+
+  useEffect(() => {
+    // Index 11 is yahtzee.
+    if (![STATE.ROLLING, STATE.SCORING].includes(gameState)) return;
+    if (yahtzeeWasRolled()) {
+      setTranState(TRAN.ENTER);
+      const timeout1 = setTimeout(() => setTranState(TRAN.EXIT), 3000);
+      const timeout2 = setTimeout(() => setTranState(TRAN.HIDDEN), 5000);
+      return () => {clearTimeout(timeout1); clearTimeout(timeout2);}
+    };
+  }, [rolls]);
+
   const stateClass = Object.entries(TRAN)[tranState][0].toLowerCase();
   return (
     <div className={`cele ${stateClass}`}>
