@@ -21,6 +21,7 @@ function App() {
   
   const prevGameStateRef = useRef(STATE.BEGIN);
   const prevHighscoreRef = useRef(getScoreCookie());
+  const mainDivRef = useRef(null);
 
   // This checks if the game is finished after scoring or moves
   // the game state on to the next turn so long as the state is 
@@ -74,7 +75,7 @@ function App() {
 
   return (
     <>
-    <div className="main">
+    <div className="main" ref={mainDivRef}>
       <header>
         <h1>Yahtzee</h1>
         <ScoreDisplay score={getScore()} />
@@ -124,6 +125,7 @@ function App() {
       score={getScore()} isHighscore={isNewHighscore}
       resetFunc={newGame}
       totalRolls={totalRolls}
+      mainDivRef={mainDivRef}
       />
     </>
   );

@@ -26,6 +26,7 @@ body {
   max-width: 1000px;
   margin: 0 auto;
   padding: 1em;
+  transition: filter 1s;
 }
 
 header {
@@ -327,6 +328,12 @@ circle {
   background-color: hsla(0, 0%, 100%, 0);
   box-shadow: none;
   font-size: 1.1em;
+  font-weight: normal;
+  color: hsl(0, 0%, 15%);
+}
+
+.stats-inner .closebtn:hover {
+  color: hsl(0, 0%, 25%);
 }
 
 .highscore-note {

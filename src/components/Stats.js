@@ -1,13 +1,18 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState} from "react";
 import {STATE, getCounts, TRAN} from "../util";
 import {DieSVG, shapeClasses} from "./DiceSection";
 import NewGameButton from "./NewGameButton";
 
 
-export default function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc, totalRolls}) {
+export default function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc, totalRolls, mainDivRef}) {
     /**Displays the stats for the current game. */
     const [tranState, setTranState] = useState(TRAN.HIDDEN);
+
     useEffect(() => {if (gameState === STATE.FINISH) setTranState(TRAN.ENTER)}, [gameState]);
+    useEffect(() => {
+      if (tranState === TRAN.ENTER) mainDivRef.current.classList.add("blur");
+      else if (tranState === TRAN.EXIT) mainDivRef.current.classList.remove("blur");
+    }, [tranState]);
 
     const counts = {...{1:0, 2:0, 3:0, 4:0, 5:0, 6:0}, ...getCounts(diceHist)};
     const className = "stats-overlay " + Object.entries(TRAN)[tranState][0].toLowerCase();
@@ -43,7 +48,10 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
             }
           </div>
   
-          <NewGameButton resetFunc={resetFunc} />
+          <NewGameButton resetFunc={() => {
+            if (tranState === TRAN.ENTER) setTranState(TRAN.EXIT);
+            resetFunc();
+            }} />
           <button className="closebtn" onClick={() => setTranState(TRAN.EXIT)}>close</button>
         </div>
       </div>
