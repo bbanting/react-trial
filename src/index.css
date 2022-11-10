@@ -293,10 +293,13 @@ circle {
   width: 100%;
   height: 100%;
   background-color: hsla(50, 100%, 50%, 50%);
-  transition: all .5s;
 }
 
+.stats-overlay.enter {animation: fade-overlay-background reverse .5s both;}
+.stats-overlay.exit {animation: fade-overlay-background .5s both;}
+
 .stats-inner {
+  position: relative;
   background-color: var(--blue);
   color: white;
   box-shadow: .5em .5em black, 0 .5em 1em hsl(0, 0%, 35%);
@@ -306,14 +309,24 @@ circle {
   box-sizing: border-box;
 }
 
+.stats-overlay.enter .stats-inner {animation: slide-from-bottom .5s ease-in-out both;}
+.stats-overlay.exit .stats-inner {animation: slide-from-bottom .5s reverse ease-in-out both;}
+
 .stats-inner .score {
   text-align: center;
   transform: none;
   font-size: clamp(4em, 8vw, 7em);
 }
 
-.stats-inner button {
+.stats-inner .newgamebtn {
   margin: 0 auto;
+}
+
+.stats-inner .closebtn {
+  margin: .5em auto 0 auto;
+  background-color: hsla(0, 0%, 100%, 0);
+  box-shadow: none;
+  font-size: 1.1em;
 }
 
 .highscore-note {
@@ -339,7 +352,7 @@ circle {
 }
 
 .tally {
-  font-size: clamp(1.5em, 2.5vw, 2em);
+  font-size: clamp(1em, 2.5vw, 1.5em);
   text-align: center;
   text-shadow: .05em .05em 0px hsl(0, 0%, 20%);
 }
@@ -457,6 +470,11 @@ circle {
   top: initial;
   box-shadow: 0 -0.2em hsla(0, 0%, 0%, 0.4) inset,
               0 .2em .3em hsla(0, 0%, 100%, 0.1) inset;
+}
+
+@keyframes fade-overlay-background {
+  from {background-color: hsla(50, 100%, 50%, 50%);}
+  to {background-color: hsla(50, 100%, 50%, 0%);}
 }
 
 @keyframes pop {

@@ -4,4 +4,4 @@ My first react project. A web version of a favourite game. See the most recent d
 
 ## TODO:
 - phone zoom in bug?
-- stats overlay animation
+- -display current highscore somewhere

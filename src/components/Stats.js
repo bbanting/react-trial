@@ -1,17 +1,20 @@
-import {STATE, getCounts} from "../util";
+import {useEffect, useState, useRef} from "react";
+import {STATE, getCounts, TRAN} from "../util";
+import {DieSVG, shapeClasses} from "./DiceSection";
 import NewGameButton from "./NewGameButton";
 
 
 export default function Stats({ gameState, diceHist, time, score, isHighscore, resetFunc, totalRolls}) {
     /**Displays the stats for the current game. */
-    const placeholder = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
-    const counts = {...placeholder, ...getCounts(diceHist)};
-    const dieClassNames = ["one", "two", "three", "four", "five", "six"];
-    const className = `stats-overlay${gameState === STATE.FINISH ? "" : " hidden"}`;
-  
+    const [tranState, setTranState] = useState(TRAN.HIDDEN);
+    useEffect(() => {if (gameState === STATE.FINISH) setTranState(TRAN.ENTER)}, [gameState]);
+
+    const counts = {...{1:0, 2:0, 3:0, 4:0, 5:0, 6:0}, ...getCounts(diceHist)};
+    const className = "stats-overlay " + Object.entries(TRAN)[tranState][0].toLowerCase();
+
     return (
-      <div className={className}>
-        <div className="stats-inner">
+      <div className={className} key={Math.random()}>
+        <div className="stats-inner" key={Math.random()} onAnimationEnd={() => {if (tranState === TRAN.EXIT) setTranState(TRAN.HIDDEN)}}>
           <div className="score">{score}</div>
           {isHighscore() && <p className="highscore-note">HIGH SCORE!</p>}
   
@@ -20,23 +23,8 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
             .map((count, i) => {
               return (
                 <div key={i}>
-                <div className="die">
-                  <svg 
-                    className={dieClassNames[i]} 
-                    width="250" height="250" 
-                    viewBox="0 0 250 250" 
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect id="Square" width="250" height="250" rx="20"/>
-                    <circle className="dot1" cx="60" cy="53" r="25"/>
-                    <circle className="dot2" cx="189" cy="53" r="25"/>
-                    <circle className="dot3" cx="60" cy="125" r="25"/> 
-                    <circle className="dot4" cx="125" cy="125" r="25"/>
-                    <circle className="dot5" cx="189" cy="125" r="25"/>
-                    <circle className="dot6" cx="60" cy="197" r="25"/>
-                    <circle className="dot7" cx="189" cy="197" r="25"/>
-                  </svg>
-                </div>
-                <div className="tally">{count}</div>
+                  <div className="die"><DieSVG className={shapeClasses[i+1]} /></div>
+                  <div className="tally">{count}</div>
                 </div>
               )
           })}
@@ -56,6 +44,7 @@ export default function Stats({ gameState, diceHist, time, score, isHighscore, r
           </div>
   
           <NewGameButton resetFunc={resetFunc} />
+          <button className="closebtn" onClick={() => setTranState(TRAN.EXIT)}>close</button>
         </div>
       </div>
     )

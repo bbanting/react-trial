@@ -26,9 +26,9 @@ export default function Celebration({rolls, gameState, dice, yahtzeeWasRolled}) 
   const stateClass = Object.entries(TRAN)[tranState][0].toLowerCase();
   return (
     <div className={`cele ${stateClass}`} onClick={() => updateTranState(TRAN.HIDDEN)}>
-      <div className="bg">
-        <div key={Math.random()}></div>
-        <div key={Math.random()}></div>
+      <div key={Math.random()} className="bg">
+        <div></div>
+        <div></div>
       </div>
       <div className="dice-effect">
         {Array(5).fill(0).map((v, i) => {
