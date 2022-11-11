@@ -35,6 +35,7 @@ function RollButton({ dice, setDice, setDiceHist, rolls, setRolls, setTotalRolls
   const clickTimeRef = useRef(0);
 
   function getDieRoll() {
+    // return 5;
     return Math.trunc(Math.random() * 6) + 1;
   }
 

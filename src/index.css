@@ -433,12 +433,24 @@ circle {
   height: 100%;
   justify-content: center;
   align-items: center;
+  text-shadow: .05em .05em hsl(0, 0%, 100%), 0 0 75px hsla(0, 0%, 0%, 0.5);
 }
 
-.cele.enter .letter {animation: celebrate .5s ease-in-out backwards;}
-.cele.exit .letter {animation: celebrate .5s reverse ease-in-out both;}
+.cele.enter .letter {
+  position: relative;
+  animation: 
+    celebrate .5s ease-in-out both, 
+    hover .75s ease-in-out infinite alternate;
+  }
+.cele.exit .letter {
+  position: relative;
+  animation: 
+    celebrate .5s reverse ease-in-out both,
+    hover .75s ease-in-out infinite alternate;
+}
 
 .dice-effect {
+  z-index: 2;
   position: fixed;
   font-size: 1em;
   display: flex;
@@ -485,15 +497,9 @@ circle {
 }
 
 @keyframes pop {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(2);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% {transform: scale(1);}
+  50% {transform: scale(2);}
+  100% {transform: scale(1);}
 }
 
 @keyframes roll{
@@ -542,33 +548,24 @@ circle {
 }
 
 @keyframes drop {
-  0% {
-    top: -100%;
-  }
-  70% {
-    top: .5em;
-  }
-  100% {
-    top: .2em;
-  }
+  0% { top: -100%;}
+  70% {top: .5em;}
+  100% {top: .2em;}
 }
 
 @keyframes slide-from-top {
-  from {
-    top: -200%;
-  }
-  to {
-    top: 0;
-  }
+  from {top: -200%;}
+  to {top: 0;}
 }
 
 @keyframes slide-from-bottom {
-  from {
-    bottom: -200%;
-  }
-  to {
-    bottom: 0;
-  }
+  from {bottom: -200%;}
+  to {bottom: 0;}
+}
+
+@keyframes hover {
+  0% {top: -.1em; text-shadow: .05em .05em hsl(0, 0%, 100%), 0 0 75px hsla(0, 0%, 0%, 0.5);}
+  100% {top: .05em; text-shadow: .045em .035em hsl(0, 0%, 100%), 0 0 75px hsla(0, 0%, 0%, 0.5);}
 }
 
 @media(max-width: 700px) {
